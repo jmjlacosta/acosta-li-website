@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Juan Acosta | Data Science Leadership & AI Consulting</title>
+    <meta name="description" content="Data science leader specializing in healthcare AI, machine learning, and predictive analytics. Director at Health Universe and Founder of Acosta-Li LLC.">
+    <meta name="keywords" content="data science, machine learning, AI consulting, healthcare analytics, predictive modeling">
+
+    <meta property="og:title" content="Juan Acosta - Data Science Leadership">
+    <meta property="og:description" content="Data science leader with proven impact in healthcare and finance. Powered nationally recognized programs saving $81M+ for Medicare.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://acosta-li.com">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-primary: #1e3a8a;
+            --color-primary-dark: #1e293b;
+            --color-accent: #3b82f6;
+            --color-cream: #fafaf9;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --color-highlight: #0ea5e9;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .banner-top {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            min-height: 450px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .banner-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-name {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5rem);
+            color: white;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+        }
+
+        .hero-contact {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero-contact a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .hero-contact a:hover {
+            color: white;
+        }
+
+        .main-content {
+            min-height: 100vh;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            margin-bottom: 80px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            color: var(--color-primary);
+            margin-bottom: 35px;
+            position: relative;
+            text-align: center;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-highlight));
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .about-box {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.04),
+                0 10px 15px rgba(0, 0, 0, 0.05),
+                0 20px 25px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-highlight) 100%);
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--color-text);
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-text strong {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid var(--color-accent);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--color-text-light);
+            line-height: 1.7;
+        }
+
+        .experience-timeline {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .experience-item {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--color-accent);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .experience-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .experience-header {
+            margin-bottom: 15px;
+        }
+
+        .experience-title {
+            font-size: 1.4rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .experience-company {
+            font-size: 1.1rem;
+            color: var(--color-text);
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .experience-company a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .experience-company a:hover {
+            color: var(--color-accent);
+        }
+
+        .experience-date {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+
+        .experience-description {
+            color: var(--color-text-light);
+            line-height: 1.7;
+        }
+
+        .experience-description li {
+            margin-bottom: 8px;
+        }
+
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-radius: 20px;
+            padding: 60px 40px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--color-primary);
+            padding: 18px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            background: #f8fafc;
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-button.secondary:hover {
+            background: white;
+            color: var(--color-primary);
+        }
+
+        .banner-bottom {
+            background: var(--color-primary);
+            height: 150px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .banner-top {
+                min-height: 350px;
+                padding: 40px 20px;
+            }
+
+            .hero-name {
+                font-size: 2.5rem;
+            }
+
+            .hero-title {
+                font-size: 1.1rem;
+            }
+
+            .hero-contact {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .section {
+                margin-bottom: 60px;
+            }
+
+            .about-box {
+                padding: 35px 25px;
+            }
+
+            .about-text {
+                font-size: 1.05rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-item {
+                padding: 25px 20px;
+            }
+
+            .cta-section {
+                padding: 40px 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-top">
+        <div class="hero-content">
+            <h1 class="hero-name">Juan Acosta</h1>
+            <p class="hero-title">Data Science Leader | AI & Machine Learning Expert | Healthcare Analytics Specialist</p>
+            <div class="hero-contact">
+                <a href="mailto:juan@acosta-li.com">juan@acosta-li.com</a>
+                <span style="color: rgba(255, 255, 255, 0.5);">•</span>
+                <a href="tel:512-222-9438">512-222-9438</a>
+                <span style="color: rgba(255, 255, 255, 0.5);">•</span>
+                <span>Austin, TX</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+
+            <!-- About Section -->
+            <div class="section">
+                <h2 class="section-title">About</h2>
+                <div class="about-box">
+                    <p class="about-text">
+                        Data science leader with a proven record of turning AI research into measurable impact in healthcare and finance.
+                        My work has powered nationally recognized preventative health programs that saved over <strong>$81 million</strong> for the Medicare Trust Fund.
+                        The models I have deployed have been featured at top chronic disease conferences in <strong>Heart Failure (JCF, HFSA)</strong> and
+                        <strong>Diabetes (ADA)</strong> as well as recognized nationally by <strong>NAACOS, the American Medical Association, and the Wall Street Journal</strong>.
+                        I specialize in deploying machine learning models at scale to reduce costs, improve outcomes, and translate complex analytics into trusted operational tools.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Services Section -->
+            <div class="section">
+                <h2 class="section-title">Consulting Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>Healthcare AI & Analytics</h3>
+                        <p>Predictive modeling for chronic disease progression, hospital admissions, and patient risk stratification. Proven track record with 10M+ lives tracked and $81M+ in Medicare savings.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Machine Learning Operations</h3>
+                        <p>End-to-end ML pipeline development, model deployment at scale, and integration with operational workflows. From prototype to production-ready systems.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>LLM & Agentic Workflows</h3>
+                        <p>Development of LLM-powered data pipelines using Agent-to-Agent (A2A) and Model Context Protocol (MCP) architectures. SQL-agnostic, deterministic, and evidence-backed systems.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Financial Risk Modeling</h3>
+                        <p>Advanced modeling and analytics for claims forecasting, financial risk assessment, and operational optimization in healthcare and finance sectors.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Data Operations & Infrastructure</h3>
+                        <p>Design and implementation of scalable data pipelines, integration systems, and operational monitoring frameworks for complex healthcare and research environments.</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Clinical Trial Analytics</h3>
+                        <p>Statistical analysis, data operations, and algorithmic development for clinical research. Experience includes algorithmic assay development from prototype to commercial launch.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experience Section -->
+            <div class="section">
+                <h2 class="section-title">Key Experience</h2>
+                <div class="experience-timeline">
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <div class="experience-title">Director of Data Science</div>
+                            <div class="experience-company"><a href="https://www.healthuniverse.com/" target="_blank" rel="noopener">Health Universe</a></div>
+                            <div class="experience-date">October 2024 – Present</div>
+                        </div>
+                        <ul class="experience-description">
+                            <li>Lead development of agentic workflows (A2A, MCP) to build efficient, SQL-agnostic, LLM-powered data pipelines for healthcare and research use cases</li>
+                            <li>Architect systems to ensure outputs are deterministic, evidence-backed, and operationally reliable</li>
+                            <li>Collaborate with clinical and technical leaders to translate cutting-edge research into deployable products</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <div class="experience-title">Co-Founder & Director of Coffee</div>
+                            <div class="experience-company"><a href="https://mucoffeeatx.com" target="_blank" rel="noopener">Mù Coffee ATX</a></div>
+                            <div class="experience-date">February 2025 – Present</div>
+                        </div>
+                        <ul class="experience-description">
+                            <li>Co-founded specialty coffee shop showcasing Chinese-inspired coffee drinks in Austin, TX</li>
+                            <li>Led coffee program development, including sourcing, roasting partnerships, and signature drink creation</li>
+                            <li>Built brand identity and community engagement through pop-ups and residencies</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <div class="experience-title">Founder & Principal Consultant</div>
+                            <div class="experience-company">Acosta-Li LLC</div>
+                            <div class="experience-date">August 2024 – Present</div>
+                        </div>
+                        <ul class="experience-description">
+                            <li>Delivered advanced modeling, analytics, and workflow design for multiple organizations across healthcare, finance, and cybersecurity</li>
+                            <li>Manage a network of subcontractors (4 data scientists, 2 project managers) engaged on a project basis to scale client delivery</li>
+                            <li>Supported clinical trial analytics, claims forecasting, financial risk modeling, and supply chain attack vulnerability projects</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <div class="experience-title">Senior Manager, Data Operations</div>
+                            <div class="experience-company"><a href="https://betterway.com/media-coverage/2024-07-30-wall-street-journal" target="_blank" rel="noopener">Babson Diagnostics</a></div>
+                            <div class="experience-date">June 2021 – August 2024</div>
+                        </div>
+                        <ul class="experience-description">
+                            <li>Developed an Algorithmic Assay for Platelet Counts from research prototype to commercial launch</li>
+                            <li>Directed data operations for blood collection services launch, including order tracking, sample lifecycle management, and financial monitoring across sites</li>
+                            <li>Built and maintained data pipelines linking Sysmex hematology analyzers, Babson databases, and Salesforce order tracking systems</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <div class="experience-title">Manager, Data Science</div>
+                            <div class="experience-company"><a href="https://www.closedloop.ai/awards-recognition" target="_blank" rel="noopener">ClosedLoop.ai</a></div>
+                            <div class="experience-date">June 2021 – March 2024</div>
+                        </div>
+                        <ul class="experience-description">
+                            <li>Served as head of Data Science, leading the entire team of 10+ data scientists, engineers, and project managers</li>
+                            <li>Operationalized predictive models that tracked over 10 million Medicare/Medicaid lives, flagging high-risk patients before critical events</li>
+                            <li>Designed and deployed predictive models for chronic disease progression and hospital admissions that powered preventative health programs driving record-breaking Medicare savings over $81 Million</li>
+                            <li>Guided ClosedLoop to achieve Best in KLAS (2021–2023) in Healthcare AI/ML, ranking above Epic, Cerner, and other major EHR vendors</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="section">
+                <div class="cta-section">
+                    <h2>Let's Work Together</h2>
+                    <p>Interested in leveraging AI and data science to drive measurable impact in your organization?</p>
+                    <div class="button-group">
+                        <a href="https://www.linkedin.com/in/juan-acosta-556a39108/" target="_blank" rel="noopener" class="cta-button">Connect on LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="banner-bottom"></div>
+</body>
+</html>
