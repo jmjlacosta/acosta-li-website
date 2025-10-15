@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Resume - Juan Acosta | Data Science Leadership</title>
+    <meta name="description" content="Complete resume and CV for Juan Acosta - Data Science Leader specializing in healthcare AI, machine learning, and predictive analytics.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-primary: #1e3a8a;
+            --color-primary-dark: #1e293b;
+            --color-accent: #3b82f6;
+            --color-cream: #fafaf9;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --color-highlight: #0ea5e9;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid var(--color-accent);
+        }
+
+        .resume-name {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .resume-contact {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            color: var(--color-text-light);
+        }
+
+        .resume-contact a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .resume-contact a:hover {
+            text-decoration: underline;
+        }
+
+        .resume-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .resume-summary p {
+            line-height: 1.8;
+            color: var(--color-text);
+        }
+
+        .resume-summary strong {
+            color: var(--color-primary);
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-accent);
+        }
+
+        .experience-item {
+            margin-bottom: 35px;
+            padding-left: 20px;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .experience-header {
+            margin-bottom: 10px;
+        }
+
+        .experience-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+        }
+
+        .experience-company {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .experience-company a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .experience-company a:hover {
+            color: var(--color-accent);
+        }
+
+        .experience-date {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .experience-description {
+            margin-left: 0;
+            padding-left: 20px;
+        }
+
+        .experience-description li {
+            margin-bottom: 8px;
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+
+        .education-item {
+            margin-bottom: 20px;
+        }
+
+        .education-degree {
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+        }
+
+        .education-school {
+            color: var(--color-text);
+            margin-top: 5px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .skills-category {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .skills-category h3 {
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .skills-category p {
+            color: var(--color-text-light);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .navbar {
+                display: none;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+
+            .experience-item {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .navbar-links {
+                gap: 20px;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+
+            .resume-header {
+                margin-bottom: 40px;
+            }
+
+            .resume-contact {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="navbar-brand">Juan Acosta</a>
+            <div class="navbar-links">
+                <a href="index.html">Home</a>
+                <a href="resume.html">Resume</a>
+                <a href="https://www.linkedin.com/in/juan-acosta-556a39108/" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="resume-header">
+            <h1 class="resume-name">Juan Acosta</h1>
+            <div class="resume-contact">
+                <a href="mailto:juan@acosta-li.com">juan@acosta-li.com</a>
+                <span>•</span>
+                <a href="tel:512-222-9438">512-222-9438</a>
+                <span>•</span>
+                <span>Austin, TX</span>
+            </div>
+        </div>
+
+        <div class="resume-summary">
+            <p>
+                Data science leader with a proven record of turning AI research into measurable impact in healthcare and finance.
+                My work has powered nationally recognized preventative health programs that saved over <strong>$81 million</strong> for the Medicare Trust Fund.
+                The models I have deployed have been featured at top chronic disease conferences in <strong>Heart Failure (JCF, HFSA)</strong> and
+                <strong>Diabetes (ADA)</strong> as well as recognized nationally by <strong>NAACOS, the American Medical Association, and the Wall Street Journal</strong>.
+                I specialize in deploying machine learning models at scale to reduce costs, improve outcomes, and translate complex analytics into trusted operational tools.
+            </p>
+        </div>
+
+        <!-- Professional Experience -->
+        <div class="section">
+            <h2 class="section-title">Professional Experience</h2>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Director of Data Science</div>
+                    <div class="experience-company"><a href="https://www.healthuniverse.com/" target="_blank" rel="noopener">Health Universe</a></div>
+                    <div class="experience-date">October 2024 – Present</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Lead development of agentic workflows (A2A, MCP) to build efficient, SQL-agnostic, LLM-powered data pipelines for healthcare and research use cases</li>
+                    <li>Architect systems to ensure outputs are deterministic, evidence-backed, and operationally reliable</li>
+                    <li>Collaborate with clinical and technical leaders to translate cutting-edge research into deployable products</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Founder & Principal Consultant</div>
+                    <div class="experience-company">Acosta-Li LLC</div>
+                    <div class="experience-date">August 2024 – Present</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Delivered advanced modeling, analytics, and workflow design for multiple organizations across healthcare, finance, and cybersecurity</li>
+                    <li>Manage a network of subcontractors (4 data scientists, 2 project managers) engaged on a project basis to scale client delivery</li>
+                    <li>Supported clinical trial analytics, claims forecasting, financial risk modeling, and supply chain attack vulnerability projects</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Senior Manager, Data Operations</div>
+                    <div class="experience-company"><a href="https://betterway.com/media-coverage/2024-07-30-wall-street-journal" target="_blank" rel="noopener">Babson Diagnostics</a></div>
+                    <div class="experience-date">June 2021 – August 2024</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Developed an <strong>Algorithmic Assay for Platelet Counts</strong> from research prototype to commercial launch, enabling accurate platelet measurement where Theranos failed</li>
+                    <li>Directed <strong>data operations</strong> for blood collection services launch, including order tracking, sample lifecycle management, and financial monitoring across sites</li>
+                    <li>Built and maintained <strong>data pipelines linking Sysmex hematology analyzers, Babson databases, and Salesforce order tracking systems</strong>, ensuring seamless integration across R&D, clinical, and operational workflows</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Manager, Data Science</div>
+                    <div class="experience-company"><a href="https://www.closedloop.ai/awards-recognition" target="_blank" rel="noopener">ClosedLoop.ai</a></div>
+                    <div class="experience-date">June 2021 – March 2024</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Served as <strong>head of Data Science</strong>, leading the entire team of 10+ (data scientists/engineers, and project managers)</li>
+                    <li><strong>Operationalized predictive models</strong> that tracked over <strong>10 million Medicare/Medicaid lives</strong>, flagging high-risk patients before critical events and enabling clients to prevent emergencies</li>
+                    <li>Designed and deployed predictive models for chronic disease progression and hospital admissions that powered preventative health programs and drove record-breaking Medicare savings over $81 Million</li>
+                    <li>Guided ClosedLoop to achieve <strong>Best in KLAS (2021–2023)</strong> in Healthcare AI/ML, ranking above Epic, Cerner, and other major EHR vendors</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Software Engineer</div>
+                    <div class="experience-company">Perfaware</div>
+                    <div class="experience-date">July 2020 – June 2021</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Deployed <strong>curbside pickup and order management systems</strong> for pharmaceutical clients during the COVID-19 pandemic</li>
+                    <li>Designed and implemented scalable backend workflows, supporting real-time order tracking, inventory integration, and customer notifications</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Non-Technical Experience -->
+        <div class="section">
+            <h2 class="section-title">Non-Technical Experience</h2>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Co-Founder & Director of Coffee</div>
+                    <div class="experience-company"><a href="https://mucoffeeatx.com" target="_blank" rel="noopener">Mù Coffee ATX</a></div>
+                    <div class="experience-date">February 2025 – Present</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Specialty coffee shop in Austin, TX, showcasing Chinese-inspired coffee drinks</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Professional Soccer Player (Left Wing)</div>
+                    <div class="experience-company">Baruta FC</div>
+                    <div class="experience-date">2009 Season</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Competed at a professional level during the 2009 season in the Venezuelan liga FUTVE</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Data Researcher</div>
+                    <div class="experience-company">Project Seed, University of Texas at Austin</div>
+                    <div class="experience-date">2018 – 2020</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Studied pediatric biometrics for high-stress side effects; supported enrollment of children in school-based counter-stress programs</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div class="experience-title">Media Coordinator</div>
+                    <div class="experience-company">GEUSB (Venezuela)</div>
+                    <div class="experience-date">2012 – 2014</div>
+                </div>
+                <ul class="experience-description">
+                    <li>Managed social media accounts amplifying anti-dictatorial student protest efforts</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="section">
+            <h2 class="section-title">Education</h2>
+
+            <div class="education-item">
+                <div class="education-degree">M.S. Computer Science (Data Analytics)</div>
+                <div class="education-school">Boston University</div>
+            </div>
+
+            <div class="education-item">
+                <div class="education-degree">B.S. Mathematics (Probability Theory)</div>
+                <div class="education-school">The University of Texas at Austin</div>
+            </div>
+
+            <div class="education-item">
+                <div class="education-degree">B.A. Economics (Econometrics)</div>
+                <div class="education-school">The University of Texas at Austin</div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="section">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skills-category">
+                    <h3>Programming & Data Science</h3>
+                    <p>Python, Java, SQL, Spark, R</p>
+                </div>
+
+                <div class="skills-category">
+                    <h3>Machine Learning & AI</h3>
+                    <p>TensorFlow, PyTorch, Scikit-learn, Pandas, NumPy, LangChain, LLM workflows, Retrieval-Augmented Generation (RAG), Agent-to-Agent (A2A), Model Context Protocol (MCP)</p>
+                </div>
+
+                <div class="skills-category">
+                    <h3>Data Infrastructure</h3>
+                    <p>Vector Databases, Snowflake, PostgreSQL, AWS, GCP, Docker</p>
+                </div>
+
+                <div class="skills-category">
+                    <h3>Development & Deployment</h3>
+                    <p>FastAPI, Streamlit, OpenAI Swarm, Google ADK</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
