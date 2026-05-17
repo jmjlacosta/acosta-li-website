@@ -186,6 +186,15 @@
     <div id="syncPill" class="sync-pill">Loading…</div>
   </header>
 
+  <div id="cloudHandoff" class="card" style="display:none; background: #ebfbee; border-color: #b2f2bb;">
+    <div style="font-weight: 600; margin-bottom: 4px; color: #2b8a3e;">You're on the local version</div>
+    <div style="font-size: 13px; color: #2f5f3a; margin-bottom: 12px;">
+      Your data is now synced to the cloud. Open the public version on any device — phone, laptop, hospital wifi — and it'll have everything.
+    </div>
+    <a id="cloudLink" href="#" target="_blank" rel="noopener" style="display:inline-block; background: var(--accent); color: white; padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none;">Open cloud version</a>
+    <button id="cloudCopy" class="ghost-btn" style="margin-left: 8px;">Copy cloud link</button>
+  </div>
+
   <div class="card">
     <div class="timer-area">
       <div id="liveTimer" class="live-timer idle">0:00</div>
@@ -797,6 +806,21 @@ $("shareCopy").addEventListener("click", async () => {
   try { await navigator.clipboard.writeText(location.href); $("shareCopy").textContent = "Copied ✓"; setTimeout(() => $("shareCopy").textContent = "Copy link", 1500); }
   catch { alert("Couldn't copy automatically — long-press to copy the URL."); }
 });
+
+// Cloud handoff: when running on a non-canonical origin, offer a one-click jump
+// to the GitHub Pages URL with the current household key carried over.
+const CLOUD_URL = "https://jmjlacosta.github.io/acosta-li-website/contractions/";
+if (location.origin !== "https://jmjlacosta.github.io") {
+  const dest = CLOUD_URL + "#k=" + trackerKey;
+  const handoff = $("cloudHandoff");
+  const link = $("cloudLink");
+  handoff.style.display = "block";
+  link.href = dest;
+  $("cloudCopy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(dest); $("cloudCopy").textContent = "Copied ✓"; setTimeout(() => $("cloudCopy").textContent = "Copy cloud link", 1500); }
+    catch { prompt("Copy this URL:", dest); }
+  });
+}
 
 // Resume in-progress timer across reload
 if (state.activeStart != null) {
