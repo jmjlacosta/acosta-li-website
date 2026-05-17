@@ -12,12 +12,14 @@
     --ink: #2a1a22;
     --muted: #7a6770;
     --accent: #d6336c;
+    --accent-hover: #c0265d;
     --accent-soft: #ffe3ec;
+    --accent-rgb: 214, 51, 108;
     --good: #2f9e44;
     --warn: #e8590c;
     --danger: #c92a2a;
     --border: #f1d9e0;
-    --shadow: 0 8px 24px rgba(214, 51, 108, 0.08);
+    --shadow: 0 8px 24px rgba(var(--accent-rgb), 0.08);
   }
   * { box-sizing: border-box; }
   html, body {
@@ -41,6 +43,22 @@
   .sync-pill.saving { background: #fff9db; color: #846200; border-color: #ffe066; }
   .sync-pill.synced { background: #ebfbee; color: #2f9e44; border-color: #b2f2bb; }
 
+  .theme-picker {
+    display: flex; gap: 8px; justify-content: center; margin-top: 12px;
+  }
+  .theme-swatch {
+    width: 22px; height: 22px; border-radius: 999px;
+    border: 2px solid transparent;
+    cursor: pointer; padding: 0;
+    transition: transform 0.1s ease, border-color 0.15s ease;
+  }
+  .theme-swatch:hover { transform: scale(1.1); }
+  .theme-swatch.selected { border-color: var(--ink); }
+  .theme-swatch[data-theme="pink"]   { background: #d6336c; }
+  .theme-swatch[data-theme="green"]  { background: #425743; }
+  .theme-swatch[data-theme="blue"]   { background: #1c7ed6; }
+  .theme-swatch[data-theme="purple"] { background: #7950f2; }
+
   .card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 18px; padding: 20px; box-shadow: var(--shadow);
@@ -60,11 +78,11 @@
     width: 100%; max-width: 360px; height: 96px;
     border-radius: 999px; font-size: 22px; font-weight: 600;
     color: white; background: var(--accent);
-    box-shadow: 0 10px 24px rgba(214, 51, 108, 0.32);
+    box-shadow: 0 10px 24px rgba(var(--accent-rgb), 0.32);
     cursor: pointer;
     transition: transform 0.08s ease, background 0.2s ease, box-shadow 0.2s ease;
   }
-  .big-btn:hover { background: #c0265d; }
+  .big-btn:hover { background: var(--accent-hover); }
   .big-btn:active { transform: scale(0.98); }
   .big-btn.active { background: var(--danger); box-shadow: 0 10px 24px rgba(201, 42, 42, 0.32); }
   .big-btn.active:hover { background: #b22020; }
@@ -164,7 +182,7 @@
     background: var(--accent); color: white; border: none;
     padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer;
   }
-  .modal .primary:hover { background: #c0265d; }
+  .modal .primary:hover { background: var(--accent-hover); }
   .modal .secondary {
     background: transparent; border: 1px solid var(--border); color: var(--muted);
     padding: 10px 18px; border-radius: 999px; font-size: 14px; cursor: pointer;
@@ -184,6 +202,12 @@
     <h1>Genny's Contraction Tracker</h1>
     <p>Tap to start when one begins. Tap again when it ends.</p>
     <div id="syncPill" class="sync-pill">Loading…</div>
+    <div class="theme-picker" id="themePicker">
+      <button class="theme-swatch" data-theme="pink"   title="Pink"></button>
+      <button class="theme-swatch" data-theme="green"  title="Mù Green"></button>
+      <button class="theme-swatch" data-theme="blue"   title="Blue"></button>
+      <button class="theme-swatch" data-theme="purple" title="Purple"></button>
+    </div>
   </header>
 
   <div id="cloudHandoff" class="card" style="display:none; background: #ebfbee; border-color: #b2f2bb;">
@@ -286,6 +310,43 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 const SUPABASE_URL = "https://xopkxnuokwqhclffiklq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_RyoVcrbDKdywZAAo7xrhJg_jO9PbHgX";
 const TABLE = "contractions";
+const SETTINGS_TABLE = "tracker_settings";
+
+// ---------- Themes ----------
+const THEMES = {
+  pink:   { bg: "#fdf2f4", ink: "#2a1a22", muted: "#7a6770",
+            accent: "#d6336c", accentHover: "#c0265d", accentSoft: "#ffe3ec",
+            border: "#f1d9e0", rgb: "214, 51, 108" },
+  green:  { bg: "#f4f7f4", ink: "#1f2a20", muted: "#677a68",
+            accent: "#425743", accentHover: "#34452f", accentSoft: "#dfe9df",
+            border: "#dde6de", rgb: "66, 87, 67" },
+  blue:   { bg: "#f1f7fd", ink: "#13283c", muted: "#5a7387",
+            accent: "#1c7ed6", accentHover: "#1971c2", accentSoft: "#d0ebff",
+            border: "#cfe2f3", rgb: "28, 126, 214" },
+  purple: { bg: "#f6f1fd", ink: "#26183c", muted: "#6a5a87",
+            accent: "#7950f2", accentHover: "#6741d9", accentSoft: "#e5dbff",
+            border: "#e1d4f7", rgb: "121, 80, 242" },
+};
+const THEME_LS = "gennyTheme_v1";
+
+function applyTheme(name) {
+  const t = THEMES[name] || THEMES.pink;
+  const r = document.documentElement.style;
+  r.setProperty("--bg", t.bg);
+  r.setProperty("--ink", t.ink);
+  r.setProperty("--muted", t.muted);
+  r.setProperty("--accent", t.accent);
+  r.setProperty("--accent-hover", t.accentHover);
+  r.setProperty("--accent-soft", t.accentSoft);
+  r.setProperty("--border", t.border);
+  r.setProperty("--accent-rgb", t.rgb);
+  document.querySelectorAll(".theme-swatch").forEach(b => {
+    b.classList.toggle("selected", b.dataset.theme === name);
+  });
+  localStorage.setItem(THEME_LS, name);
+}
+// Apply cached theme immediately so reload doesn't flash pink
+applyTheme(localStorage.getItem(THEME_LS) || "pink");
 
 // ---------- Tracker key (household scope) ----------
 const KEY_LS = "gennyTrackerKey_v1";
@@ -836,6 +897,37 @@ setInterval(() => {
   if (state.activeStart == null) { timerSub.textContent = lastEndedSub(); renderStats(); renderBanner(); }
 }, 15000);
 
+// Theme: load from Supabase, save on change, realtime sync
+async function loadTheme() {
+  try {
+    const { data, error } = await sb.from(SETTINGS_TABLE)
+      .select("theme").eq("tracker_key", trackerKey).maybeSingle();
+    if (error) throw error;
+    if (data?.theme) applyTheme(data.theme);
+  } catch (err) { console.warn("Theme load failed:", err.message); }
+}
+async function setTheme(name) {
+  if (!THEMES[name]) return;
+  applyTheme(name);
+  try {
+    await sb.from(SETTINGS_TABLE).upsert(
+      { tracker_key: trackerKey, theme: name },
+      { onConflict: "tracker_key" }
+    );
+  } catch (err) { console.warn("Theme save failed:", err.message); }
+}
+document.querySelectorAll(".theme-swatch").forEach(btn => {
+  btn.addEventListener("click", () => setTheme(btn.dataset.theme));
+});
+sb.channel("settings:" + trackerKey)
+  .on("postgres_changes",
+    { event: "*", schema: "public", table: SETTINGS_TABLE, filter: "tracker_key=eq." + trackerKey },
+    (payload) => {
+      const t = payload.new?.theme;
+      if (t && t !== (localStorage.getItem(THEME_LS) || "pink")) applyTheme(t);
+    })
+  .subscribe();
+
 // Realtime: subscribe to changes for this household
 sb.channel("contractions:" + trackerKey)
   .on("postgres_changes",
@@ -858,6 +950,7 @@ sb.channel("contractions:" + trackerKey)
 setSync("saving", "Loading…");
 migrateLegacy();
 render();
+loadTheme();
 try {
   // Fetch remote first, then re-apply any pending local inserts/edits so we don't lose them.
   const localPending = [...state.contractions];
