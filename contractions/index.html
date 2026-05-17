@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#fdf2f4" />
+<title>Genny's Contraction Tracker</title>
+<style>
+  :root {
+    --bg: #fdf2f4;
+    --card: #ffffff;
+    --ink: #2a1a22;
+    --muted: #7a6770;
+    --accent: #d6336c;
+    --accent-soft: #ffe3ec;
+    --good: #2f9e44;
+    --warn: #e8590c;
+    --danger: #c92a2a;
+    --border: #f1d9e0;
+    --shadow: 0 8px 24px rgba(214, 51, 108, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 18px 80px; }
+  header { text-align: center; margin-bottom: 18px; position: relative; }
+  header h1 { margin: 0; font-size: 26px; letter-spacing: -0.01em; }
+  header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+  .sync-pill {
+    position: absolute; top: 0; right: 0;
+    font-size: 11px; padding: 4px 10px; border-radius: 999px;
+    background: #e7f5ff; color: #1c7ed6; border: 1px solid #a5d8ff;
+    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .sync-pill.offline { background: #fff5f5; color: #c92a2a; border-color: #ffc9c9; }
+  .sync-pill.saving { background: #fff9db; color: #846200; border-color: #ffe066; }
+  .sync-pill.synced { background: #ebfbee; color: #2f9e44; border-color: #b2f2bb; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; padding: 20px; box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+
+  .timer-area { text-align: center; padding: 12px 4px 4px; }
+  .live-timer {
+    font-variant-numeric: tabular-nums;
+    font-size: 56px; font-weight: 600; letter-spacing: -0.02em;
+    line-height: 1.05; min-height: 64px;
+  }
+  .live-timer.idle { color: var(--muted); font-weight: 400; }
+  .timer-sub { color: var(--muted); font-size: 14px; margin: 4px 0 18px; min-height: 18px; }
+  .big-btn {
+    appearance: none; border: none;
+    width: 100%; max-width: 360px; height: 96px;
+    border-radius: 999px; font-size: 22px; font-weight: 600;
+    color: white; background: var(--accent);
+    box-shadow: 0 10px 24px rgba(214, 51, 108, 0.32);
+    cursor: pointer;
+    transition: transform 0.08s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .big-btn:hover { background: #c0265d; }
+  .big-btn:active { transform: scale(0.98); }
+  .big-btn.active { background: var(--danger); box-shadow: 0 10px 24px rgba(201, 42, 42, 0.32); }
+  .big-btn.active:hover { background: #b22020; }
+
+  .intensity-row {
+    display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;
+  }
+  .intensity-row .label {
+    font-size: 13px; color: var(--muted); align-self: center; margin-right: 4px;
+  }
+  .chip {
+    border: 1px solid var(--border); background: white; color: var(--ink);
+    padding: 8px 14px; border-radius: 999px; font-size: 13px; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip.selected { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 540px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+  .stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px; text-align: left;
+  }
+  .stat .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat .v { font-size: 24px; font-weight: 600; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .stat .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .banner { border-radius: 14px; padding: 14px 16px; font-size: 14px; line-height: 1.4; border: 1px solid; }
+  .banner.neutral { background: #f8fafc; border-color: #e2e8f0; color: #334155; }
+  .banner.early { background: #fff9db; border-color: #ffe066; color: #5c3c00; }
+  .banner.active { background: #fff0e6; border-color: #ffa94d; color: #6b2a00; }
+  .banner.hospital { background: #ffe3e3; border-color: #ff8787; color: #6b1010; font-weight: 600; }
+  .banner .title { font-weight: 700; margin-bottom: 4px; }
+
+  .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+  .row-head h2 { font-size: 16px; margin: 0; }
+  .row-head .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ghost-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 6px 12px; border-radius: 999px; font-size: 13px; cursor: pointer;
+  }
+  .ghost-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .ghost-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .empty { text-align: center; color: var(--muted); padding: 28px 0; font-size: 14px; }
+  .delete-x, .edit-x {
+    background: transparent; border: none; color: var(--muted);
+    cursor: pointer; font-size: 14px; padding: 4px 8px; border-radius: 6px;
+  }
+  .delete-x:hover { color: var(--danger); background: #fff0f0; }
+  .edit-x:hover { color: var(--accent); background: var(--accent-soft); }
+  .row-actions { display: inline-flex; gap: 2px; }
+  .badge {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600;
+  }
+  .badge.mild { background: #e6fcf5; color: #0b7285; }
+  .badge.moderate { background: #fff4e6; color: #b25400; }
+  .badge.strong { background: #ffe3e3; color: #b02020; }
+  .badge.pending { background: #fff9db; color: #846200; }
+
+  .disclaimer {
+    font-size: 12px; color: var(--muted); line-height: 1.5;
+    text-align: center; padding: 14px 8px 0;
+  }
+  .disclaimer strong { color: var(--danger); }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(42, 26, 34, 0.4);
+    display: none; align-items: center; justify-content: center;
+    padding: 16px; z-index: 50;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: white; border-radius: 18px; padding: 22px; width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .modal h3 { margin: 0 0 14px; font-size: 18px; }
+  .modal label {
+    display: block; font-size: 12px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin: 12px 0 4px; font-weight: 600;
+  }
+  .modal input, .modal select, .modal textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: 10px; font-size: 15px; background: white; color: var(--ink); font-family: inherit;
+  }
+  .modal input:focus, .modal select:focus, .modal textarea:focus {
+    outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent);
+  }
+  .modal .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .modal .footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+  .modal .primary {
+    background: var(--accent); color: white; border: none;
+    padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .modal .primary:hover { background: #c0265d; }
+  .modal .secondary {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 10px 18px; border-radius: 999px; font-size: 14px; cursor: pointer;
+  }
+  .form-error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 18px; }
+  .share-url {
+    margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px solid var(--border);
+    border-radius: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px; word-break: break-all; color: var(--ink);
+  }
+  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Genny's Contraction Tracker</h1>
+    <p>Tap to start when one begins. Tap again when it ends.</p>
+    <div id="syncPill" class="sync-pill">Loading…</div>
+  </header>
+
+  <div class="card">
+    <div class="timer-area">
+      <div id="liveTimer" class="live-timer idle">0:00</div>
+      <div id="timerSub" class="timer-sub">Ready when you are</div>
+      <button id="mainBtn" class="big-btn">Start Contraction</button>
+      <div class="intensity-row" id="intensityRow" style="display:none;">
+        <span class="label">Intensity:</span>
+        <button class="chip" data-intensity="mild">Mild</button>
+        <button class="chip" data-intensity="moderate">Moderate</button>
+        <button class="chip" data-intensity="strong">Strong</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="banner" class="card banner neutral" style="display:none;"></div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">Last hour</div><div class="v" id="statHour">0</div><div class="sub">contractions</div></div>
+    <div class="stat"><div class="k">Avg frequency</div><div class="v" id="statFreq">—</div><div class="sub">last 5, start-to-start</div></div>
+    <div class="stat"><div class="k">Avg duration</div><div class="v" id="statDur">—</div><div class="sub">last 5</div></div>
+    <div class="stat"><div class="k">Total tracked</div><div class="v" id="statTotal">0</div><div class="sub" id="statSince">—</div></div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="row-head">
+      <h2>History</h2>
+      <div class="actions">
+        <button class="ghost-btn" id="addManualBtn">+ Add manually</button>
+        <button class="ghost-btn" id="shareBtn">Share / pair device</button>
+        <button class="ghost-btn" id="exportBtn">Export CSV</button>
+        <button class="ghost-btn danger" id="clearBtn">Clear all</button>
+      </div>
+    </div>
+    <div id="historyWrap"><div class="empty" id="emptyState">No contractions logged yet.</div></div>
+  </div>
+
+  <p class="disclaimer">
+    This tool is for personal tracking only and is not a medical device.
+    <strong>Call your provider</strong> if your water breaks, you have heavy bleeding,
+    the baby stops moving, or contractions follow the <strong>5-1-1 pattern</strong>
+    (every 5 min, lasting 1 min, for 1 hour).
+  </p>
+</div>
+
+<div class="modal-backdrop" id="manualModal">
+  <div class="modal">
+    <h3 id="manualTitle">Add a contraction</h3>
+    <label for="manualStart">Started at</label>
+    <input type="datetime-local" id="manualStart" />
+    <div class="row2">
+      <div>
+        <label for="manualDur">Duration (seconds)</label>
+        <input type="number" id="manualDur" min="1" step="1" placeholder="e.g. 60" />
+      </div>
+      <div>
+        <label for="manualIntensity">Intensity</label>
+        <select id="manualIntensity">
+          <option value="">— none —</option>
+          <option value="mild">Mild</option>
+          <option value="moderate">Moderate</option>
+          <option value="strong">Strong</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-error" id="manualErr"></div>
+    <div class="footer">
+      <button class="secondary" id="manualCancel">Cancel</button>
+      <button class="primary" id="manualSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="shareModal">
+  <div class="modal">
+    <h3>Pair another device</h3>
+    <p class="hint">Open this exact URL on your other phone or laptop. It carries the same household key, so both devices will see the same log in real time.</p>
+    <div class="share-url" id="shareUrl"></div>
+    <div class="footer">
+      <button class="secondary" id="shareClose">Close</button>
+      <button class="primary" id="shareCopy">Copy link</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+
+// ---------- Config ----------
+const SUPABASE_URL = "https://xopkxnuokwqhclffiklq.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_RyoVcrbDKdywZAAo7xrhJg_jO9PbHgX";
+const TABLE = "contractions";
+
+// ---------- Tracker key (household scope) ----------
+const KEY_LS = "gennyTrackerKey_v1";
+const ACTIVE_LS = "gennyActive_v1";
+const OUTBOX_LS = "gennyOutbox_v1";
+const CLIENT_ID_LS = "gennyClientId_v1";
+
+function randomKey() { return crypto.randomUUID().replaceAll("-", ""); }
+
+function readKeyFromHash() {
+  const h = location.hash || "";
+  const m = h.match(/k=([0-9a-fA-F]{32,})/);
+  return m ? m[1] : null;
+}
+function getOrInitTrackerKey() {
+  const hashKey = readKeyFromHash();
+  if (hashKey) {
+    localStorage.setItem(KEY_LS, hashKey);
+    return hashKey;
+  }
+  let k = localStorage.getItem(KEY_LS);
+  if (!k) {
+    k = randomKey();
+    localStorage.setItem(KEY_LS, k);
+  }
+  // Always reflect the key in the URL so reload + "copy link" works
+  if (location.hash !== "#k=" + k) {
+    history.replaceState(null, "", location.pathname + "#k=" + k);
+  }
+  return k;
+}
+function getClientId() {
+  let c = localStorage.getItem(CLIENT_ID_LS);
+  if (!c) { c = crypto.randomUUID(); localStorage.setItem(CLIENT_ID_LS, c); }
+  return c;
+}
+
+const trackerKey = getOrInitTrackerKey();
+const clientId = getClientId();
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false },
+  realtime: { params: { eventsPerSecond: 5 } },
+});
+
+// ---------- State ----------
+const state = {
+  contractions: [],           // sorted ascending by start_at
+  activeStart: Number(localStorage.getItem(ACTIVE_LS)) || null,
+  pendingIntensity: null,
+  outbox: JSON.parse(localStorage.getItem(OUTBOX_LS) || "[]"),
+  online: navigator.onLine,
+  syncing: false,
+  editingId: null,
+};
+
+// ---------- Migrate old localStorage-only data (one-time) ----------
+const OLD_KEY = "gennyContractions_v1";
+const MIGRATED_FLAG = "gennyMigrated_v1";
+function migrateLegacy() {
+  if (localStorage.getItem(MIGRATED_FLAG)) return;
+  let oldRows = [];
+  try { oldRows = JSON.parse(localStorage.getItem(OLD_KEY) || "[]"); } catch {}
+  if (!Array.isArray(oldRows) || oldRows.length === 0) {
+    localStorage.setItem(MIGRATED_FLAG, "1");
+    return;
+  }
+  for (const o of oldRows) {
+    if (!o || !o.start || !o.end || !o.duration) continue;
+    const row = {
+      id: crypto.randomUUID(),
+      tracker_key: trackerKey,
+      start_at: new Date(o.start).toISOString(),
+      end_at: new Date(o.end).toISOString(),
+      duration_ms: Math.max(1, Math.min(3599000, Math.round(o.duration))),
+      intensity: o.intensity || null,
+      manual: !!o.manual,
+      client_id: clientId,
+    };
+    state.outbox.push({ kind: "insert", row });
+    state.contractions.push(row);
+  }
+  state.contractions.sort((a, b) => new Date(a.start_at) - new Date(b.start_at));
+  saveOutbox();
+  // Keep OLD_KEY as backup until first successful sync; set flag so we don't re-migrate
+  localStorage.setItem(MIGRATED_FLAG, "1");
+  console.log("Migrated " + oldRows.length + " legacy contractions to outbox.");
+}
+
+function saveOutbox() { localStorage.setItem(OUTBOX_LS, JSON.stringify(state.outbox)); }
+function saveActive(ts) {
+  if (ts == null) localStorage.removeItem(ACTIVE_LS);
+  else localStorage.setItem(ACTIVE_LS, String(ts));
+}
+
+// ---------- Sync pill ----------
+function setSync(kind, label) {
+  syncPill.className = "sync-pill " + kind;
+  syncPill.textContent = label;
+}
+function updateSyncPill() {
+  if (!state.online) return setSync("offline", "Offline");
+  if (state.syncing || state.outbox.length > 0) return setSync("saving", "Saving…");
+  return setSync("synced", "Synced");
+}
+
+window.addEventListener("online", () => { state.online = true; updateSyncPill(); flushOutbox(); });
+window.addEventListener("offline", () => { state.online = false; updateSyncPill(); });
+
+// ---------- Server I/O ----------
+async function fetchAll() {
+  const { data, error } = await sb.from(TABLE)
+    .select("*")
+    .eq("tracker_key", trackerKey)
+    .order("start_at", { ascending: true });
+  if (error) throw error;
+  state.contractions = data;
+  render();
+}
+
+async function flushOutbox() {
+  if (state.outbox.length === 0) { updateSyncPill(); return; }
+  if (!state.online) { updateSyncPill(); return; }
+  state.syncing = true; updateSyncPill();
+  const queue = [...state.outbox];
+  for (const op of queue) {
+    try {
+      if (op.kind === "insert") {
+        const { error } = await sb.from(TABLE).upsert(op.row, { onConflict: "id" });
+        if (error) throw error;
+      } else if (op.kind === "update") {
+        const { error } = await sb.from(TABLE).update(op.patch)
+          .eq("tracker_key", trackerKey).eq("id", op.id);
+        if (error) throw error;
+      } else if (op.kind === "delete") {
+        const { error } = await sb.from(TABLE).delete()
+          .eq("tracker_key", trackerKey).eq("id", op.id);
+        if (error) throw error;
+      } else if (op.kind === "deleteAll") {
+        const { error } = await sb.from(TABLE).delete().eq("tracker_key", trackerKey);
+        if (error) throw error;
+      }
+      state.outbox = state.outbox.filter(x => x !== op);
+      saveOutbox();
+    } catch (err) {
+      console.warn("Sync failed, will retry:", err.message);
+      break; // stop on first error; retry later
+    }
+  }
+  state.syncing = false;
+  updateSyncPill();
+}
+setInterval(flushOutbox, 8000);
+
+// ---------- Local insertion (optimistic) ----------
+function insertLocally(row) {
+  state.contractions.push(row);
+  state.contractions.sort((a, b) => new Date(a.start_at) - new Date(b.start_at));
+}
+function deleteLocally(id) {
+  state.contractions = state.contractions.filter(c => c.id !== id);
+}
+
+// ---------- UI helpers ----------
+const $ = (id) => document.getElementById(id);
+const mainBtn = $("mainBtn");
+const liveTimer = $("liveTimer");
+const timerSub = $("timerSub");
+const intensityRow = $("intensityRow");
+const banner = $("banner");
+const syncPill = $("syncPill");
+
+function fmtClock(ms) {
+  if (ms < 0) ms = 0;
+  const t = Math.floor(ms / 1000);
+  return Math.floor(t/60) + ":" + (t%60).toString().padStart(2,"0");
+}
+function fmtSec(ms) { return Math.round(ms/1000) + "s"; }
+function fmtMin(ms) {
+  const m = ms / 60000;
+  if (m < 1) return Math.round(ms/1000) + "s";
+  if (m < 10) return m.toFixed(1) + " min";
+  return Math.round(m) + " min";
+}
+function fmtDuration(ms) {
+  const s = Math.round(ms/1000);
+  if (s < 60) return s + "s";
+  return Math.floor(s/60) + "m " + (s%60) + "s";
+}
+function fmtTOD(ts) { return new Date(ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }
+
+// ---------- Timing flow ----------
+let tickHandle = null;
+function startTick() { stopTick(); tick(); tickHandle = setInterval(tick, 250); }
+function stopTick()  { if (tickHandle) { clearInterval(tickHandle); tickHandle = null; } }
+function tick() {
+  if (state.activeStart != null) {
+    const elapsed = Date.now() - state.activeStart;
+    liveTimer.textContent = fmtClock(elapsed);
+    timerSub.textContent = elapsedHint(elapsed);
+  } else {
+    timerSub.textContent = lastEndedSub();
+  }
+}
+function lastEndedSub() {
+  if (state.contractions.length === 0) return "Ready when you are";
+  const last = state.contractions[state.contractions.length - 1];
+  return "Since last ended: " + fmtMin(Date.now() - new Date(last.end_at).getTime());
+}
+function elapsedHint(elapsedMs) {
+  const last = state.contractions.at(-1);
+  if (last) {
+    const gap = state.activeStart - new Date(last.start_at).getTime();
+    if (gap > 0) return "Started " + fmtMin(gap) + " after the previous one";
+  }
+  if (elapsedMs > 90000) return "Long one — keep breathing";
+  return "In progress…";
+}
+
+function startContraction() {
+  state.activeStart = Date.now();
+  saveActive(state.activeStart);
+  state.pendingIntensity = null;
+  mainBtn.textContent = "End Contraction";
+  mainBtn.classList.add("active");
+  intensityRow.style.display = "flex";
+  intensityRow.querySelectorAll(".chip").forEach(c => c.classList.remove("selected"));
+  liveTimer.classList.remove("idle");
+  startTick();
+}
+function endContraction() {
+  if (state.activeStart == null) return;
+  const end = Date.now();
+  const start = state.activeStart;
+  const duration = end - start;
+  if (duration < 1500) {
+    if (!confirm("That was very short (" + Math.round(duration/1000) + "s). Save it anyway?")) {
+      state.activeStart = null; saveActive(null); resetTimerUI();
+      return;
+    }
+  }
+  const row = {
+    id: crypto.randomUUID(),
+    tracker_key: trackerKey,
+    start_at: new Date(start).toISOString(),
+    end_at: new Date(end).toISOString(),
+    duration_ms: duration,
+    intensity: state.pendingIntensity || null,
+    manual: false,
+    client_id: clientId,
+  };
+  insertLocally(row);
+  state.outbox.push({ kind: "insert", row }); saveOutbox();
+  state.activeStart = null; saveActive(null);
+  resetTimerUI(); render(); flushOutbox();
+}
+function resetTimerUI() {
+  mainBtn.textContent = "Start Contraction";
+  mainBtn.classList.remove("active");
+  intensityRow.style.display = "none";
+  liveTimer.textContent = "0:00";
+  liveTimer.classList.add("idle");
+  timerSub.textContent = lastEndedSub();
+  stopTick();
+}
+
+// ---------- Stats + pattern detection ----------
+function computeStats() {
+  const now = Date.now();
+  const hourAgo = now - 3600_000;
+  const lastHour = state.contractions.filter(c => new Date(c.start_at).getTime() >= hourAgo);
+  const recent = state.contractions.slice(-5);
+  let avgDur = null;
+  if (recent.length) avgDur = recent.reduce((a, c) => a + c.duration_ms, 0) / recent.length;
+  let avgFreq = null;
+  const freqWindow = state.contractions.slice(-6);
+  if (freqWindow.length >= 2) {
+    const gaps = [];
+    for (let i = 1; i < freqWindow.length; i++) {
+      gaps.push(new Date(freqWindow[i].start_at) - new Date(freqWindow[i-1].start_at));
+    }
+    avgFreq = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+  }
+  return { lastHour, avgDur, avgFreq };
+}
+
+function patternBanner() {
+  const now = Date.now();
+  const inHour = state.contractions.filter(c => new Date(c.start_at).getTime() >= now - 3600_000);
+  if (inHour.length < 2) {
+    return { kind: "neutral", title: "Tracking", msg: "Keep going. Patterns become clearer with more data." };
+  }
+  const gaps = [];
+  for (let i = 1; i < inHour.length; i++) {
+    gaps.push(new Date(inHour[i].start_at) - new Date(inHour[i-1].start_at));
+  }
+  const avgGap = gaps.reduce((a,b)=>a+b,0)/gaps.length;
+  const avgDur = inHour.reduce((a,c)=>a+c.duration_ms,0)/inHour.length;
+  const avgGapMin = avgGap/60000;
+  const avgDurSec = avgDur/1000;
+  const span = new Date(inHour.at(-1).start_at) - new Date(inHour[0].start_at);
+  const spansHour = span >= 55*60*1000;
+
+  if (spansHour && avgGapMin <= 4.2 && avgDurSec >= 55) {
+    return { kind: "hospital",
+      title: "4-1-1 pattern detected — consider calling your provider",
+      msg: "Averaging ~" + avgGapMin.toFixed(1) + " min apart, lasting ~" + Math.round(avgDurSec) + "s, for an hour." };
+  }
+  if (spansHour && avgGapMin <= 5.2 && avgDurSec >= 55) {
+    return { kind: "hospital",
+      title: "5-1-1 pattern detected — time to call your provider",
+      msg: "Averaging ~" + avgGapMin.toFixed(1) + " min apart, lasting ~" + Math.round(avgDurSec) + "s, for an hour." };
+  }
+  if (avgGapMin <= 5.5 && avgDurSec >= 45) {
+    return { kind: "active",
+      title: "Looks like active labor pattern",
+      msg: "Contractions are getting closer (~" + avgGapMin.toFixed(1) + " min apart) and longer (~" + Math.round(avgDurSec) + "s). Keep tracking — 5-1-1 / 4-1-1 is the usual hospital cue." };
+  }
+  if (avgGapMin <= 15) {
+    return { kind: "early",
+      title: "Looks like early labor",
+      msg: "Averaging ~" + avgGapMin.toFixed(1) + " min apart, ~" + Math.round(avgDurSec) + "s long. Rest, hydrate, eat if you can." };
+  }
+  return { kind: "neutral",
+    title: "Irregular so far",
+    msg: "Contractions averaging ~" + avgGapMin.toFixed(1) + " min apart. Could be early or pre-labor — keep tracking." };
+}
+
+// ---------- Render ----------
+function renderBanner() {
+  const b = patternBanner();
+  banner.style.display = "block";
+  banner.className = "card banner " + b.kind;
+  banner.innerHTML = '<div class="title">' + b.title + '</div><div>' + b.msg + '</div>';
+}
+function renderStats() {
+  const { lastHour, avgDur, avgFreq } = computeStats();
+  $("statHour").textContent = lastHour.length;
+  $("statTotal").textContent = state.contractions.length;
+  $("statDur").textContent = avgDur != null ? fmtSec(avgDur) : "—";
+  $("statFreq").textContent = avgFreq != null ? fmtMin(avgFreq) : "—";
+  if (state.contractions.length) {
+    $("statSince").textContent = "since " + fmtTOD(state.contractions[0].start_at);
+  } else {
+    $("statSince").textContent = "—";
+  }
+}
+function renderHistory() {
+  const wrap = $("historyWrap");
+  if (state.contractions.length === 0) {
+    wrap.innerHTML = '<div class="empty">No contractions logged yet.</div>';
+    return;
+  }
+  const pendingIds = new Set(state.outbox.filter(o => o.kind === "insert").map(o => o.row.id));
+  const rows = [...state.contractions].reverse().map((c, idx) => {
+    const realIdx = state.contractions.length - 1 - idx;
+    const prev = state.contractions[realIdx - 1];
+    const gap = prev ? new Date(c.start_at) - new Date(prev.start_at) : null;
+    const intensity = c.intensity
+      ? '<span class="badge ' + c.intensity + '">' + c.intensity + '</span>'
+      : '<span style="color:var(--muted);">—</span>';
+    const pendingBadge = pendingIds.has(c.id) ? ' <span class="badge pending">syncing</span>' : '';
+    return (
+      '<tr>' +
+      '<td>' + fmtTOD(c.start_at) + pendingBadge + '</td>' +
+      '<td>' + fmtDuration(c.duration_ms) + '</td>' +
+      '<td>' + (gap != null ? fmtMin(gap) : '—') + '</td>' +
+      '<td>' + intensity + '</td>' +
+      '<td style="text-align:right;"><span class="row-actions">' +
+        '<button class="edit-x" data-edit="' + c.id + '" title="Edit">✎</button>' +
+        '<button class="delete-x" data-del="' + c.id + '" title="Delete">×</button>' +
+      '</span></td>' +
+      '</tr>'
+    );
+  }).join("");
+  wrap.innerHTML =
+    '<table><thead><tr>' +
+      '<th>Start</th><th>Duration</th><th>From prev</th><th>Intensity</th><th></th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
+  wrap.querySelectorAll("[data-del]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const id = e.currentTarget.getAttribute("data-del");
+      if (!confirm("Delete this contraction?")) return;
+      deleteLocally(id);
+      state.outbox.push({ kind: "delete", id }); saveOutbox();
+      render(); flushOutbox();
+    });
+  });
+  wrap.querySelectorAll("[data-edit]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      openEditModal(e.currentTarget.getAttribute("data-edit"));
+    });
+  });
+}
+function render() {
+  renderStats(); renderHistory(); renderBanner();
+  if (state.activeStart == null) timerSub.textContent = lastEndedSub();
+}
+
+// ---------- Event wiring ----------
+mainBtn.addEventListener("click", () => {
+  if (state.activeStart == null) startContraction(); else endContraction();
+});
+intensityRow.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    intensityRow.querySelectorAll(".chip").forEach(c => c.classList.remove("selected"));
+    chip.classList.add("selected");
+    state.pendingIntensity = chip.getAttribute("data-intensity");
+  });
+});
+
+$("clearBtn").addEventListener("click", () => {
+  if (state.contractions.length === 0) return;
+  if (!confirm("Delete all " + state.contractions.length + " logged contractions on every device? This cannot be undone.")) return;
+  state.contractions = [];
+  state.outbox.push({ kind: "deleteAll" }); saveOutbox();
+  render(); flushOutbox();
+});
+
+$("exportBtn").addEventListener("click", () => {
+  if (state.contractions.length === 0) { alert("Nothing to export yet."); return; }
+  const header = "start_iso,end_iso,duration_seconds,gap_from_prev_seconds,intensity\n";
+  const lines = state.contractions.map((c, i) => {
+    const prev = state.contractions[i - 1];
+    const gap = prev ? Math.round((new Date(c.start_at) - new Date(prev.start_at)) / 1000) : "";
+    return [c.start_at, c.end_at, Math.round(c.duration_ms/1000), gap, c.intensity || ""].join(",");
+  }).join("\n");
+  const blob = new Blob([header + lines], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "contractions-" + new Date().toISOString().replace(/[:.]/g, "-").slice(0,16) + ".csv";
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
+});
+
+// Manual entry / edit modal (dual-purpose)
+const manualModal = $("manualModal");
+function toLocalInputValue(d) {
+  const pad = (n) => String(n).padStart(2,"0");
+  return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes());
+}
+function openAddModal() {
+  state.editingId = null;
+  $("manualTitle").textContent = "Add a contraction";
+  const now = new Date(); now.setMinutes(now.getMinutes()-5);
+  $("manualStart").value = toLocalInputValue(now);
+  $("manualDur").value = ""; $("manualIntensity").value = ""; $("manualErr").textContent = "";
+  manualModal.classList.add("open");
+  setTimeout(() => $("manualStart").focus(), 50);
+}
+function openEditModal(id) {
+  const row = state.contractions.find(c => c.id === id);
+  if (!row) return;
+  state.editingId = id;
+  $("manualTitle").textContent = "Edit contraction";
+  $("manualStart").value = toLocalInputValue(new Date(row.start_at));
+  $("manualDur").value = Math.round(row.duration_ms / 1000);
+  $("manualIntensity").value = row.intensity || "";
+  $("manualErr").textContent = "";
+  manualModal.classList.add("open");
+  setTimeout(() => $("manualDur").focus(), 50);
+}
+$("addManualBtn").addEventListener("click", openAddModal);
+$("manualCancel").addEventListener("click", () => manualModal.classList.remove("open"));
+manualModal.addEventListener("click", (e) => { if (e.target === manualModal) manualModal.classList.remove("open"); });
+$("manualSave").addEventListener("click", () => {
+  $("manualErr").textContent = "";
+  const v = $("manualStart").value;
+  if (!v) { $("manualErr").textContent = "Pick a start time."; return; }
+  const startMs = new Date(v).getTime();
+  if (isNaN(startMs)) { $("manualErr").textContent = "Invalid start time."; return; }
+  if (startMs > Date.now() + 60_000) { $("manualErr").textContent = "Start time is in the future."; return; }
+  const durSec = Number($("manualDur").value);
+  if (!durSec || durSec < 1 || durSec > 3599) { $("manualErr").textContent = "Duration must be between 1 and 3599 seconds."; return; }
+  const durMs = Math.round(durSec * 1000);
+
+  if (state.editingId) {
+    const existing = state.contractions.find(c => c.id === state.editingId);
+    if (!existing) { manualModal.classList.remove("open"); return; }
+    const patch = {
+      start_at: new Date(startMs).toISOString(),
+      end_at: new Date(startMs + durMs).toISOString(),
+      duration_ms: durMs,
+      intensity: $("manualIntensity").value || null,
+    };
+    Object.assign(existing, patch);
+    state.contractions.sort((a, b) => new Date(a.start_at) - new Date(b.start_at));
+    state.outbox.push({ kind: "update", id: state.editingId, patch });
+  } else {
+    const row = {
+      id: crypto.randomUUID(),
+      tracker_key: trackerKey,
+      start_at: new Date(startMs).toISOString(),
+      end_at: new Date(startMs + durMs).toISOString(),
+      duration_ms: durMs,
+      intensity: $("manualIntensity").value || null,
+      manual: true,
+      client_id: clientId,
+    };
+    insertLocally(row);
+    state.outbox.push({ kind: "insert", row });
+  }
+  saveOutbox();
+  manualModal.classList.remove("open");
+  state.editingId = null;
+  render(); flushOutbox();
+});
+
+// Share modal
+const shareModal = $("shareModal");
+$("shareBtn").addEventListener("click", () => {
+  $("shareUrl").textContent = location.href;
+  shareModal.classList.add("open");
+});
+$("shareClose").addEventListener("click", () => shareModal.classList.remove("open"));
+shareModal.addEventListener("click", (e) => { if (e.target === shareModal) shareModal.classList.remove("open"); });
+$("shareCopy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(location.href); $("shareCopy").textContent = "Copied ✓"; setTimeout(() => $("shareCopy").textContent = "Copy link", 1500); }
+  catch { alert("Couldn't copy automatically — long-press to copy the URL."); }
+});
+
+// Resume in-progress timer across reload
+if (state.activeStart != null) {
+  mainBtn.textContent = "End Contraction";
+  mainBtn.classList.add("active");
+  intensityRow.style.display = "flex";
+  liveTimer.classList.remove("idle");
+  startTick();
+}
+
+// Periodic refresh for "last hour" / time-since
+setInterval(() => {
+  if (state.activeStart == null) { timerSub.textContent = lastEndedSub(); renderStats(); renderBanner(); }
+}, 15000);
+
+// Realtime: subscribe to changes for this household
+sb.channel("contractions:" + trackerKey)
+  .on("postgres_changes",
+    { event: "*", schema: "public", table: TABLE, filter: "tracker_key=eq." + trackerKey },
+    (payload) => {
+      if (payload.eventType === "INSERT") {
+        if (!state.contractions.some(c => c.id === payload.new.id)) {
+          insertLocally(payload.new); render();
+        }
+      } else if (payload.eventType === "DELETE") {
+        deleteLocally(payload.old.id); render();
+      } else if (payload.eventType === "UPDATE") {
+        const i = state.contractions.findIndex(c => c.id === payload.new.id);
+        if (i >= 0) { state.contractions[i] = payload.new; render(); }
+      }
+    })
+  .subscribe();
+
+// Initial load
+setSync("saving", "Loading…");
+migrateLegacy();
+render();
+try {
+  // Fetch remote first, then re-apply any pending local inserts/edits so we don't lose them.
+  const localPending = [...state.contractions];
+  const pendingIds = new Set(state.outbox.filter(o => o.kind === "insert").map(o => o.row.id));
+  await fetchAll();
+  for (const r of localPending) {
+    if (pendingIds.has(r.id) && !state.contractions.some(c => c.id === r.id)) {
+      state.contractions.push(r);
+    }
+  }
+  state.contractions.sort((a, b) => new Date(a.start_at) - new Date(b.start_at));
+  render();
+  await flushOutbox();
+  updateSyncPill();
+} catch (err) {
+  console.warn("Initial load failed:", err.message);
+  updateSyncPill();
+}
+</script>
+</body>
+</html>
