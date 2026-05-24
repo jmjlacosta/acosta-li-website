@@ -99,3 +99,29 @@ alter table public.tracker_settings add column if not exists mode text;
 -- Which baby widgets are shown (JSON array of keys: diaper, breast, bottle,
 -- sleep, pump). Null = show all. Synced per household.
 alter table public.tracker_settings add column if not exists baby_trackers jsonb;
+
+-- ---------------------------------------------------------------------------
+-- Apple Watch / Shortcuts integration.
+-- The web app supplies id/start_at on every insert, but a watch Shortcut
+-- (Get Contents of URL) has no way to generate a UUID, so give these columns
+-- defaults. Harmless for the web client, which keeps sending its own values.
+-- ---------------------------------------------------------------------------
+alter table public.baby_events alter column id       set default gen_random_uuid();
+alter table public.baby_events alter column start_at set default now();
+
+-- A watch can't easily do date math, so let an "End feed" PATCH set only
+-- end_at and have the duration computed server-side. Runs on insert+update;
+-- recomputes the same value the web client already sends, so it's a no-op there.
+create or replace function public.set_baby_event_duration()
+returns trigger language plpgsql as $$
+begin
+  if new.end_at is not null and new.start_at is not null then
+    new.duration_ms := round(extract(epoch from (new.end_at - new.start_at)) * 1000);
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists baby_events_duration on public.baby_events;
+create trigger baby_events_duration
+  before insert or update on public.baby_events
+  for each row execute function public.set_baby_event_duration();
