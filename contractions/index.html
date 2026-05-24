@@ -208,7 +208,13 @@
       <button class="theme-swatch" data-theme="blue"   title="Blue"></button>
       <button class="theme-swatch" data-theme="purple" title="Purple"></button>
     </div>
+    <div id="babyChipRow" style="margin-top: 10px;"></div>
+    <div style="margin-top:8px; font-size:13px; color:var(--muted);">
+      <a href="../baby/" style="color:var(--accent); text-decoration:none;">Baby tracker →</a>
+    </div>
   </header>
+
+  <div id="birthBanner" class="card" style="display:none; background: var(--accent-soft); border-color: var(--accent); color: var(--accent);"></div>
 
   <div id="cloudHandoff" class="card" style="display:none; background: #ebfbee; border-color: #b2f2bb;">
     <div style="font-weight: 600; margin-bottom: 4px; color: #2b8a3e;">You're on the local version</div>
@@ -305,6 +311,7 @@
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+import { mountBabyUI } from "../shared/babies.js";
 
 // ---------- Config ----------
 const SUPABASE_URL = "https://xopkxnuokwqhclffiklq.supabase.co";
@@ -389,6 +396,66 @@ const clientId = getClientId();
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: false },
   realtime: { params: { eventsPerSecond: 5 } },
+});
+
+// ---------- Baby identity (shared with /baby/) ----------
+let currentBabyId = null;
+let currentBaby = null;
+function renderBirthBanner(baby) {
+  const el = document.getElementById("birthBanner");
+  if (!baby || !baby.birth_at) { el.style.display = "none"; el.innerHTML = ""; return; }
+  const birthMs = new Date(baby.birth_at).getTime();
+  if (birthMs > Date.now()) { el.style.display = "none"; el.innerHTML = ""; return; }
+  const when = new Date(birthMs).toLocaleString([], {
+    weekday: "long", month: "short", day: "numeric",
+    hour: "numeric", minute: "2-digit",
+  });
+  // If we logged a first contraction, show labor length too.
+  let laborLine = "";
+  if (state.contractions.length) {
+    const first = state.contractions[0];
+    const firstMs = new Date(first.start_at).getTime();
+    if (firstMs < birthMs) {
+      const hours = (birthMs - firstMs) / 3600000;
+      const labor = hours < 24 ? hours.toFixed(1) + " h" : (hours / 24).toFixed(1) + " days";
+      laborLine = " · " + labor + " from first contraction";
+    }
+  }
+  const safeName = (baby.name || "Baby").replace(/[<>&]/g, "");
+  el.innerHTML =
+    '<div style="font-weight:700; font-size:16px; margin-bottom:4px;">' +
+      safeName + " arrived " + when +
+    '</div>' +
+    '<div style="font-size:13px;">This tracker is now a keepsake' + laborLine + '. ' +
+      '<a href="../baby/" style="color:inherit; text-decoration:underline; font-weight:600;">' +
+      'Open the baby tracker →</a></div>';
+  el.style.display = "block";
+}
+
+mountBabyUI({
+  chipContainer: document.getElementById("babyChipRow"),
+  sb, trackerKey,
+  onBabyChange: (baby) => {
+    currentBabyId = baby?.id || null;
+    currentBaby = baby || null;
+    renderBirthBanner(baby);
+  },
+  getUntaggedCount: async () => {
+    const { count, error } = await sb.from(TABLE)
+      .select("*", { count: "exact", head: true })
+      .eq("tracker_key", trackerKey)
+      .is("baby_id", null);
+    if (error) throw error;
+    return count || 0;
+  },
+  doBackfill: async (babyId) => {
+    const { error } = await sb.from(TABLE)
+      .update({ baby_id: babyId })
+      .eq("tracker_key", trackerKey)
+      .is("baby_id", null);
+    if (error) throw error;
+  },
+  backfillNoun: "contractions",
 });
 
 // ---------- State ----------
@@ -590,6 +657,7 @@ function endContraction() {
   const row = {
     id: crypto.randomUUID(),
     tracker_key: trackerKey,
+    baby_id: currentBabyId,
     start_at: new Date(start).toISOString(),
     end_at: new Date(end).toISOString(),
     duration_ms: duration,
@@ -741,7 +809,7 @@ function renderHistory() {
   });
 }
 function render() {
-  renderStats(); renderHistory(); renderBanner();
+  renderStats(); renderHistory(); renderBanner(); renderBirthBanner(currentBaby);
   if (state.activeStart == null) timerSub.textContent = lastEndedSub();
 }
 
@@ -839,6 +907,7 @@ $("manualSave").addEventListener("click", () => {
     const row = {
       id: crypto.randomUUID(),
       tracker_key: trackerKey,
+      baby_id: currentBabyId,
       start_at: new Date(startMs).toISOString(),
       end_at: new Date(startMs + durMs).toISOString(),
       duration_ms: durMs,
