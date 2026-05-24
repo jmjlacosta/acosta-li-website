@@ -5,195 +5,79 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#fdf2f4" />
 <title>Genny's Contraction Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/theme.css">
+<script>
+  // Anti-flash: set theme attributes before first paint.
+  (function () {
+    var a = localStorage.getItem("gennyTheme_v1") || "pink";
+    var m = localStorage.getItem("gennyMode_v1") || "auto";
+    var dark = m === "dark" || (m === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var r = document.documentElement;
+    r.dataset.accent = a; r.dataset.mode = dark ? "dark" : "light";
+  })();
+</script>
 <style>
-  :root {
-    --bg: #fdf2f4;
-    --card: #ffffff;
-    --ink: #2a1a22;
-    --muted: #7a6770;
-    --accent: #d6336c;
-    --accent-hover: #c0265d;
-    --accent-soft: #ffe3ec;
-    --accent-rgb: 214, 51, 108;
-    --good: #2f9e44;
-    --warn: #e8590c;
-    --danger: #c92a2a;
-    --border: #f1d9e0;
-    --shadow: 0 8px 24px rgba(var(--accent-rgb), 0.08);
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0;
-    background: var(--bg); color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 18px 80px; }
-  header { text-align: center; margin-bottom: 18px; position: relative; }
-  header h1 { margin: 0; font-size: 26px; letter-spacing: -0.01em; }
-  header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
-  .sync-pill {
-    position: absolute; top: 0; right: 0;
-    font-size: 11px; padding: 4px 10px; border-radius: 999px;
-    background: #e7f5ff; color: #1c7ed6; border: 1px solid #a5d8ff;
-    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .sync-pill.offline { background: #fff5f5; color: #c92a2a; border-color: #ffc9c9; }
-  .sync-pill.saving { background: #fff9db; color: #846200; border-color: #ffe066; }
-  .sync-pill.synced { background: #ebfbee; color: #2f9e44; border-color: #b2f2bb; }
+  /* Contraction tracker — page-specific styles. Design system: ../shared/theme.css */
 
-  .theme-picker {
-    display: flex; gap: 8px; justify-content: center; margin-top: 12px;
-  }
-  .theme-swatch {
-    width: 22px; height: 22px; border-radius: 999px;
-    border: 2px solid transparent;
-    cursor: pointer; padding: 0;
-    transition: transform 0.1s ease, border-color 0.15s ease;
-  }
-  .theme-swatch:hover { transform: scale(1.1); }
-  .theme-swatch.selected { border-color: var(--ink); }
-  .theme-swatch[data-theme="pink"]   { background: #d6336c; }
-  .theme-swatch[data-theme="green"]  { background: #425743; }
-  .theme-swatch[data-theme="blue"]   { background: #1c7ed6; }
-  .theme-swatch[data-theme="purple"] { background: #7950f2; }
-
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; padding: 20px; box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
-
-  .timer-area { text-align: center; padding: 12px 4px 4px; }
+  .timer-area { text-align: center; padding: 14px 4px 4px; }
   .live-timer {
+    font-family: var(--font-display);
     font-variant-numeric: tabular-nums;
-    font-size: 56px; font-weight: 600; letter-spacing: -0.02em;
-    line-height: 1.05; min-height: 64px;
+    font-size: 60px; font-weight: 700; letter-spacing: -0.02em;
+    line-height: 1.05; min-height: 66px;
   }
   .live-timer.idle { color: var(--muted); font-weight: 400; }
-  .timer-sub { color: var(--muted); font-size: 14px; margin: 4px 0 18px; min-height: 18px; }
+  .timer-sub { color: var(--muted); font-size: 14px; margin: 4px 0 20px; min-height: 18px; }
+
   .big-btn {
     appearance: none; border: none;
     width: 100%; max-width: 360px; height: 96px;
-    border-radius: 999px; font-size: 22px; font-weight: 600;
-    color: white; background: var(--accent);
-    box-shadow: 0 10px 24px rgba(var(--accent-rgb), 0.32);
-    cursor: pointer;
+    border-radius: 999px; font-size: 22px; font-weight: 700;
+    color: var(--accent-contrast); background: var(--accent);
+    box-shadow: 0 14px 30px rgba(var(--accent-rgb), 0.34);
+    cursor: pointer; font-family: inherit;
     transition: transform 0.08s ease, background 0.2s ease, box-shadow 0.2s ease;
   }
   .big-btn:hover { background: var(--accent-hover); }
   .big-btn:active { transform: scale(0.98); }
-  .big-btn.active { background: var(--danger); box-shadow: 0 10px 24px rgba(201, 42, 42, 0.32); }
-  .big-btn.active:hover { background: #b22020; }
+  .big-btn.active { background: var(--danger); color: #fff; box-shadow: 0 14px 30px rgba(224, 73, 107, 0.34); }
+  .big-btn.active:hover { background: #c43355; }
 
-  .intensity-row {
-    display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;
-  }
-  .intensity-row .label {
-    font-size: 13px; color: var(--muted); align-self: center; margin-right: 4px;
-  }
-  .chip {
-    border: 1px solid var(--border); background: white; color: var(--ink);
-    padding: 8px 14px; border-radius: 999px; font-size: 13px; cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .chip:hover { border-color: var(--accent); }
-  .chip.selected { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .intensity-row { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .intensity-row .label { font-size: 13px; color: var(--muted); align-self: center; margin-right: 4px; }
 
-  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  @media (min-width: 540px) { .stats { grid-template-columns: repeat(4, 1fr); } }
-  .stat {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 14px; text-align: left;
-  }
-  .stat .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-  .stat .v { font-size: 24px; font-weight: 600; margin-top: 4px; font-variant-numeric: tabular-nums; }
-  .stat .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-  .banner { border-radius: 14px; padding: 14px 16px; font-size: 14px; line-height: 1.4; border: 1px solid; }
-  .banner.neutral { background: #f8fafc; border-color: #e2e8f0; color: #334155; }
-  .banner.early { background: #fff9db; border-color: #ffe066; color: #5c3c00; }
-  .banner.active { background: #fff0e6; border-color: #ffa94d; color: #6b2a00; }
-  .banner.hospital { background: #ffe3e3; border-color: #ff8787; color: #6b1010; font-weight: 600; }
+  /* Pattern banner */
+  .banner { border-radius: 16px; padding: 14px 16px; font-size: 14px; line-height: 1.4; border: 1px solid; color: var(--ink); }
   .banner .title { font-weight: 700; margin-bottom: 4px; }
+  .banner.neutral  { background: rgba(125,125,125,0.10); border-color: var(--border); }
+  .banner.early    { background: rgba(232,179,32,0.14); border-color: rgba(232,179,32,0.45); }
+  .banner.early .title    { color: #b9831f; }
+  .banner.active   { background: rgba(232,89,12,0.14); border-color: rgba(232,89,12,0.45); }
+  .banner.active .title   { color: #e8590c; }
+  .banner.hospital { background: rgba(224,73,107,0.16); border-color: rgba(224,73,107,0.5); }
+  .banner.hospital .title { color: var(--danger); }
+  :root[data-mode="dark"] .banner.early .title    { color: #ffd43b; }
+  :root[data-mode="dark"] .banner.active .title   { color: #ffa94d; }
+  :root[data-mode="dark"] .banner.hospital .title { color: #ff8fa3; }
 
-  .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-  .row-head h2 { font-size: 16px; margin: 0; }
-  .row-head .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-  .ghost-btn {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 6px 12px; border-radius: 999px; font-size: 13px; cursor: pointer;
-  }
-  .ghost-btn:hover { color: var(--accent); border-color: var(--accent); }
-  .ghost-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
-
+  /* History table */
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
   th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
   tr:last-child td { border-bottom: none; }
-  .empty { text-align: center; color: var(--muted); padding: 28px 0; font-size: 14px; }
-  .delete-x, .edit-x {
-    background: transparent; border: none; color: var(--muted);
-    cursor: pointer; font-size: 14px; padding: 4px 8px; border-radius: 6px;
-  }
-  .delete-x:hover { color: var(--danger); background: #fff0f0; }
-  .edit-x:hover { color: var(--accent); background: var(--accent-soft); }
-  .row-actions { display: inline-flex; gap: 2px; }
-  .badge {
-    display: inline-block; font-size: 11px; padding: 2px 8px;
-    border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600;
-  }
-  .badge.mild { background: #e6fcf5; color: #0b7285; }
-  .badge.moderate { background: #fff4e6; color: #b25400; }
-  .badge.strong { background: #ffe3e3; color: #b02020; }
-  .badge.pending { background: #fff9db; color: #846200; }
 
-  .disclaimer {
-    font-size: 12px; color: var(--muted); line-height: 1.5;
-    text-align: center; padding: 14px 8px 0;
-  }
-  .disclaimer strong { color: var(--danger); }
-
-  /* Modal */
-  .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(42, 26, 34, 0.4);
-    display: none; align-items: center; justify-content: center;
-    padding: 16px; z-index: 50;
-  }
-  .modal-backdrop.open { display: flex; }
-  .modal { background: white; border-radius: 18px; padding: 22px; width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
-  .modal h3 { margin: 0 0 14px; font-size: 18px; }
-  .modal label {
-    display: block; font-size: 12px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.05em;
-    margin: 12px 0 4px; font-weight: 600;
-  }
-  .modal input, .modal select, .modal textarea {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-    border-radius: 10px; font-size: 15px; background: white; color: var(--ink); font-family: inherit;
-  }
-  .modal input:focus, .modal select:focus, .modal textarea:focus {
-    outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent);
-  }
-  .modal .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .modal .footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
-  .modal .primary {
-    background: var(--accent); color: white; border: none;
-    padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer;
-  }
-  .modal .primary:hover { background: var(--accent-hover); }
-  .modal .secondary {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 10px 18px; border-radius: 999px; font-size: 14px; cursor: pointer;
-  }
-  .form-error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 18px; }
-  .share-url {
-    margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px solid var(--border);
-    border-radius: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 12px; word-break: break-all; color: var(--ink);
-  }
-  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  .badge.mild     { background: rgba(11,114,133,0.16);  color: #0b7285; }
+  .badge.moderate { background: rgba(178,84,0,0.16);    color: #b25400; }
+  .badge.strong   { background: rgba(201,42,42,0.16);   color: #c92a2a; }
+  .badge.pending  { background: rgba(201,138,32,0.16);  color: #b9831f; }
+  :root[data-mode="dark"] .badge.mild     { color: #3bc9db; }
+  :root[data-mode="dark"] .badge.moderate { color: #ffa94d; }
+  :root[data-mode="dark"] .badge.strong   { color: #ff8787; }
+  :root[data-mode="dark"] .badge.pending  { color: #ffd43b; }
 </style>
 </head>
 <body>
@@ -202,12 +86,7 @@
     <h1>Genny's Contraction Tracker</h1>
     <p>Tap to start when one begins. Tap again when it ends.</p>
     <div id="syncPill" class="sync-pill">Loading…</div>
-    <div class="theme-picker" id="themePicker">
-      <button class="theme-swatch" data-theme="pink"   title="Pink"></button>
-      <button class="theme-swatch" data-theme="green"  title="Mù Green"></button>
-      <button class="theme-swatch" data-theme="blue"   title="Blue"></button>
-      <button class="theme-swatch" data-theme="purple" title="Purple"></button>
-    </div>
+    <button id="modeToggle" class="mode-toggle" type="button" aria-label="Toggle dark mode"></button>
     <div id="babyChipRow" style="margin-top: 10px;"></div>
     <div style="margin-top:8px; font-size:13px; color:var(--muted);">
       <a href="../baby/" style="color:var(--accent); text-decoration:none;">Baby tracker →</a>
@@ -312,48 +191,12 @@
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { mountBabyUI } from "../shared/babies.js";
+import { initTheme } from "../shared/theme.js";
 
 // ---------- Config ----------
 const SUPABASE_URL = "https://xopkxnuokwqhclffiklq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_RyoVcrbDKdywZAAo7xrhJg_jO9PbHgX";
 const TABLE = "contractions";
-const SETTINGS_TABLE = "tracker_settings";
-
-// ---------- Themes ----------
-const THEMES = {
-  pink:   { bg: "#fdf2f4", ink: "#2a1a22", muted: "#7a6770",
-            accent: "#d6336c", accentHover: "#c0265d", accentSoft: "#ffe3ec",
-            border: "#f1d9e0", rgb: "214, 51, 108" },
-  green:  { bg: "#f4f7f4", ink: "#1f2a20", muted: "#677a68",
-            accent: "#425743", accentHover: "#34452f", accentSoft: "#dfe9df",
-            border: "#dde6de", rgb: "66, 87, 67" },
-  blue:   { bg: "#f1f7fd", ink: "#13283c", muted: "#5a7387",
-            accent: "#1c7ed6", accentHover: "#1971c2", accentSoft: "#d0ebff",
-            border: "#cfe2f3", rgb: "28, 126, 214" },
-  purple: { bg: "#f6f1fd", ink: "#26183c", muted: "#6a5a87",
-            accent: "#7950f2", accentHover: "#6741d9", accentSoft: "#e5dbff",
-            border: "#e1d4f7", rgb: "121, 80, 242" },
-};
-const THEME_LS = "gennyTheme_v1";
-
-function applyTheme(name) {
-  const t = THEMES[name] || THEMES.pink;
-  const r = document.documentElement.style;
-  r.setProperty("--bg", t.bg);
-  r.setProperty("--ink", t.ink);
-  r.setProperty("--muted", t.muted);
-  r.setProperty("--accent", t.accent);
-  r.setProperty("--accent-hover", t.accentHover);
-  r.setProperty("--accent-soft", t.accentSoft);
-  r.setProperty("--border", t.border);
-  r.setProperty("--accent-rgb", t.rgb);
-  document.querySelectorAll(".theme-swatch").forEach(b => {
-    b.classList.toggle("selected", b.dataset.theme === name);
-  });
-  localStorage.setItem(THEME_LS, name);
-}
-// Apply cached theme immediately so reload doesn't flash pink
-applyTheme(localStorage.getItem(THEME_LS) || "pink");
 
 // ---------- Tracker key (household scope) ----------
 const KEY_LS = "gennyTrackerKey_v1";
@@ -397,6 +240,9 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: false },
   realtime: { params: { eventsPerSecond: 5 } },
 });
+
+// ---------- Theme (accent + light/dark, synced via Supabase) ----------
+const theme = initTheme({ sb, trackerKey, toggleButton: document.getElementById("modeToggle") });
 
 // ---------- Baby identity (shared with /baby/) ----------
 let currentBabyId = null;
@@ -456,6 +302,7 @@ mountBabyUI({
     if (error) throw error;
   },
   backfillNoun: "contractions",
+  mountAccent: (el) => theme.mountAccentSwatches(el),
 });
 
 // ---------- State ----------
@@ -966,37 +813,6 @@ setInterval(() => {
   if (state.activeStart == null) { timerSub.textContent = lastEndedSub(); renderStats(); renderBanner(); }
 }, 15000);
 
-// Theme: load from Supabase, save on change, realtime sync
-async function loadTheme() {
-  try {
-    const { data, error } = await sb.from(SETTINGS_TABLE)
-      .select("theme").eq("tracker_key", trackerKey).maybeSingle();
-    if (error) throw error;
-    if (data?.theme) applyTheme(data.theme);
-  } catch (err) { console.warn("Theme load failed:", err.message); }
-}
-async function setTheme(name) {
-  if (!THEMES[name]) return;
-  applyTheme(name);
-  try {
-    await sb.from(SETTINGS_TABLE).upsert(
-      { tracker_key: trackerKey, theme: name },
-      { onConflict: "tracker_key" }
-    );
-  } catch (err) { console.warn("Theme save failed:", err.message); }
-}
-document.querySelectorAll(".theme-swatch").forEach(btn => {
-  btn.addEventListener("click", () => setTheme(btn.dataset.theme));
-});
-sb.channel("settings:" + trackerKey)
-  .on("postgres_changes",
-    { event: "*", schema: "public", table: SETTINGS_TABLE, filter: "tracker_key=eq." + trackerKey },
-    (payload) => {
-      const t = payload.new?.theme;
-      if (t && t !== (localStorage.getItem(THEME_LS) || "pink")) applyTheme(t);
-    })
-  .subscribe();
-
 // Realtime: subscribe to changes for this household
 sb.channel("contractions:" + trackerKey)
   .on("postgres_changes",
@@ -1019,7 +835,6 @@ sb.channel("contractions:" + trackerKey)
 setSync("saving", "Loading…");
 migrateLegacy();
 render();
-loadTheme();
 try {
   // Fetch remote first, then re-apply any pending local inserts/edits so we don't lose them.
   const localPending = [...state.contractions];

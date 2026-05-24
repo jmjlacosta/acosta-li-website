@@ -107,6 +107,8 @@ export function mountBabyUI({
   onBabyChange,
   getUntaggedCount, doBackfill,
   backfillNoun = "records",
+  mountAccent,   // optional: (containerEl) => void — renders the theme picker
+  trackerPrefs,  // optional: { items:[{key,label}], get:()=>[keys], set:(keys)=>void }
 }) {
   ensureStyles();
 
@@ -154,6 +156,14 @@ export function mountBabyUI({
       <input data-role="birth" type="datetime-local" />
       <label>Notes (optional)</label>
       <textarea data-role="notes" rows="2" placeholder="Anything to remember"></textarea>
+      <div data-role="accent-section" style="display:none;">
+        <label>Theme color</label>
+        <div data-role="accent"></div>
+      </div>
+      <div data-role="trackers-section" style="display:none;">
+        <label>What to track</label>
+        <div data-role="trackers" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+      </div>
       <div class="form-error" data-role="err"></div>
       <div class="footer">
         <button class="secondary" data-role="cancel">Cancel</button>
@@ -163,6 +173,37 @@ export function mountBabyUI({
   `;
   document.body.appendChild(modal);
   const $r = (role) => modal.querySelector('[data-role="' + role + '"]');
+
+  // Theme color picker lives in this modal (kept out of the header for a
+  // cleaner look). Rendered once; applies + persists live, independent of Save.
+  if (mountAccent) {
+    $r("accent-section").style.display = "block";
+    mountAccent($r("accent"));
+  }
+
+  // "What to track" toggles — show/hide widgets on the page. Applies live.
+  let refreshTrackers = () => {};
+  if (trackerPrefs && Array.isArray(trackerPrefs.items)) {
+    $r("trackers-section").style.display = "block";
+    const cont = $r("trackers");
+    const chips = trackerPrefs.items.map(it => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.dataset.key = it.key; b.textContent = it.label;
+      b.addEventListener("click", () => {
+        const en = new Set(trackerPrefs.get());
+        if (en.has(it.key)) en.delete(it.key); else en.add(it.key);
+        trackerPrefs.set([...en]);
+        refreshTrackers();
+      });
+      cont.appendChild(b);
+      return b;
+    });
+    refreshTrackers = () => {
+      const en = new Set(trackerPrefs.get());
+      chips.forEach(c => c.classList.toggle("selected", en.has(c.dataset.key)));
+    };
+    refreshTrackers();
+  }
 
   function openModal() {
     if (currentBaby) {
@@ -177,6 +218,7 @@ export function mountBabyUI({
       $r("notes").value = "";
     }
     $r("err").textContent = "";
+    refreshTrackers();
     modal.classList.add("open");
     setTimeout(() => $r("name").focus(), 50);
   }

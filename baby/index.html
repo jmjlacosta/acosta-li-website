@@ -5,115 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#fdf2f4" />
 <title>Baby Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/theme.css">
+<script>
+  // Anti-flash: set theme attributes before first paint.
+  (function () {
+    var a = localStorage.getItem("gennyTheme_v1") || "pink";
+    var m = localStorage.getItem("gennyMode_v1") || "auto";
+    var dark = m === "dark" || (m === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var r = document.documentElement;
+    r.dataset.accent = a; r.dataset.mode = dark ? "dark" : "light";
+  })();
+</script>
 <style>
-  :root {
-    --bg: #fdf2f4;
-    --card: #ffffff;
-    --ink: #2a1a22;
-    --muted: #7a6770;
-    --accent: #d6336c;
-    --accent-hover: #c0265d;
-    --accent-soft: #ffe3ec;
-    --accent-rgb: 214, 51, 108;
-    --good: #2f9e44;
-    --warn: #e8590c;
-    --danger: #c92a2a;
-    --border: #f1d9e0;
-    --shadow: 0 8px 24px rgba(var(--accent-rgb), 0.08);
+  /* Baby tracker — page-specific styles. Design system: ../shared/theme.css */
 
-    /* per-event-type accents (theme-independent) */
-    --c-diaper:  #1c7ed6;
-    --c-breast:  #d6336c;
-    --c-bottle:  #b25400;
-    --c-sleep:   #5f3dc4;
-    --c-pump:    #0b7285;
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0;
-    background: var(--bg); color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 18px 80px; }
-
-  header { text-align: center; margin-bottom: 18px; position: relative; }
-  header h1 { margin: 0; font-size: 26px; letter-spacing: -0.01em; }
-  header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
-  header .tools {
-    margin-top: 8px; font-size: 13px; color: var(--muted);
-  }
+  header .tools { margin-top: 10px; font-size: 13px; }
   header .tools a { color: var(--accent); text-decoration: none; }
   header .tools a:hover { text-decoration: underline; }
 
-  .sync-pill {
-    position: absolute; top: 0; right: 0;
-    font-size: 11px; padding: 4px 10px; border-radius: 999px;
-    background: #e7f5ff; color: #1c7ed6; border: 1px solid #a5d8ff;
-    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .sync-pill.offline { background: #fff5f5; color: #c92a2a; border-color: #ffc9c9; }
-  .sync-pill.saving  { background: #fff9db; color: #846200; border-color: #ffe066; }
-  .sync-pill.synced  { background: #ebfbee; color: #2f9e44; border-color: #b2f2bb; }
-
-  .theme-picker {
-    display: flex; gap: 8px; justify-content: center; margin-top: 12px;
-  }
-  .theme-swatch {
-    width: 22px; height: 22px; border-radius: 999px;
-    border: 2px solid transparent;
-    cursor: pointer; padding: 0;
-    transition: transform 0.1s ease, border-color 0.15s ease;
-  }
-  .theme-swatch:hover { transform: scale(1.1); }
-  .theme-swatch.selected { border-color: var(--ink); }
-  .theme-swatch[data-theme="pink"]   { background: #d6336c; }
-  .theme-swatch[data-theme="green"]  { background: #425743; }
-  .theme-swatch[data-theme="blue"]   { background: #1c7ed6; }
-  .theme-swatch[data-theme="purple"] { background: #7950f2; }
-
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; padding: 18px; box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
-  .card h2 { font-size: 16px; margin: 0 0 12px; }
-
-  /* Active timers strip */
+  /* Active timers strip — sticky so running timers stay reachable on scroll */
   .active-strip {
     display: none; gap: 10px; flex-wrap: wrap; align-items: center;
     background: var(--accent-soft); border: 1px solid var(--accent);
-    color: var(--accent); padding: 10px 14px; border-radius: 14px;
+    color: var(--accent); padding: 11px 15px; border-radius: 16px;
     margin-bottom: 16px; font-size: 14px;
+    backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+    position: sticky; top: 8px; z-index: 20;
+    box-shadow: var(--shadow);
   }
   .active-strip.visible { display: flex; }
-  .active-strip .label { font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
+  .active-strip .label { font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.08em; }
   .active-strip .pill {
-    background: white; color: var(--ink); padding: 4px 10px; border-radius: 999px;
-    font-variant-numeric: tabular-nums; font-weight: 600; font-size: 13px;
-    border: 1px solid var(--border);
+    background: var(--surface-solid); color: var(--ink); padding: 5px 11px; border-radius: 999px;
+    font-variant-numeric: tabular-nums; font-weight: 700; font-size: 13px; border: 1px solid var(--border);
   }
 
-  /* Action grid */
-  .actions-grid {
-    display: grid; gap: 14px;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 620px) { .actions-grid { grid-template-columns: 1fr 1fr; } }
+  /* Action grid — flex wrap + center so the 5th card never orphans left */
+  .actions-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
 
   .action-card {
+    flex: 1 1 280px; max-width: 440px;
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
-    display: flex; flex-direction: column; gap: 10px;
+    border-radius: 20px; padding: 17px; box-shadow: var(--shadow);
+    backdrop-filter: blur(var(--blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--blur)) saturate(1.4);
+    display: flex; flex-direction: column; gap: 11px;
   }
-  .action-card .head {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
-  }
-  .action-card .head h3 { margin: 0; font-size: 15px; }
+  .action-card .head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .action-card .head h3 { font-family: var(--font-display); margin: 0; font-size: 16px; font-weight: 600; }
   .action-card .head .dot {
-    display: inline-block; width: 8px; height: 8px; border-radius: 999px;
-    background: var(--c-diaper); margin-right: 6px; vertical-align: middle;
+    display: inline-block; width: 9px; height: 9px; border-radius: 999px;
+    background: var(--c-diaper); margin-right: 7px; vertical-align: middle;
   }
   .action-card[data-type="diaper"] .dot { background: var(--c-diaper); }
   .action-card[data-type="breast"] .dot { background: var(--c-breast); }
@@ -122,82 +66,40 @@
   .action-card[data-type="pump"]   .dot { background: var(--c-pump); }
   .action-card .last { font-size: 12px; color: var(--muted); min-height: 16px; }
 
-  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
-  .chip {
-    border: 1px solid var(--border); background: white; color: var(--ink);
-    padding: 8px 14px; border-radius: 999px; font-size: 13px; cursor: pointer;
-    transition: all 0.15s ease; font-family: inherit;
-  }
-  .chip:hover { border-color: var(--accent); }
-  .chip.selected { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
-  .chip.solid {
-    background: var(--accent); border-color: var(--accent); color: white; font-weight: 600;
-  }
-  .chip.solid:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .chip-row { display: flex; gap: 7px; flex-wrap: wrap; }
 
-  .timer-line {
-    display: flex; align-items: center; gap: 12px; justify-content: space-between;
-  }
+  .timer-line { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
   .timer-display {
-    font-variant-numeric: tabular-nums; font-weight: 600; font-size: 22px;
-    letter-spacing: -0.01em;
+    font-family: var(--font-display); font-variant-numeric: tabular-nums;
+    font-weight: 700; font-size: 26px; letter-spacing: -0.01em;
   }
-  .timer-display.idle { color: var(--muted); font-weight: 400; }
+  .timer-display.idle { color: var(--muted); font-weight: 400; font-family: var(--font-body); font-size: 14px; }
   .timer-btn {
-    appearance: none; border: none; border-radius: 999px;
-    padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
-    color: white; background: var(--accent);
-    transition: background 0.15s ease, transform 0.08s ease;
-    font-family: inherit;
+    appearance: none; border: none; border-radius: 999px; padding: 11px 19px;
+    font-size: 14px; font-weight: 700; cursor: pointer; color: var(--accent-contrast);
+    background: var(--accent); transition: background 0.15s ease, transform 0.08s ease; font-family: inherit;
   }
   .timer-btn:hover { background: var(--accent-hover); }
   .timer-btn:active { transform: scale(0.98); }
-  .timer-btn.stop { background: var(--danger); }
-  .timer-btn.stop:hover { background: #b22020; }
+  .timer-btn.stop { background: var(--danger); color: #fff; }
+  .timer-btn.stop:hover { background: #c43355; }
   .timer-btn.full { width: 100%; }
 
-  /* Stats */
-  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  @media (min-width: 640px) { .stats { grid-template-columns: repeat(5, 1fr); } }
-  .stat {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 12px; text-align: left;
-  }
-  .stat .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-  .stat .v { font-size: 20px; font-weight: 600; margin-top: 4px; font-variant-numeric: tabular-nums; }
-  .stat .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  /* History */
-  .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-  .row-head h2 { font-size: 16px; margin: 0; }
-  .row-head .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-  .ghost-btn {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 6px 12px; border-radius: 999px; font-size: 13px; cursor: pointer;
-    font-family: inherit;
-  }
-  .ghost-btn:hover { color: var(--accent); border-color: var(--accent); }
-  .ghost-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
-
-  .timeline { display: flex; flex-direction: column; gap: 4px; }
+  /* History timeline */
+  .timeline { display: flex; flex-direction: column; gap: 2px; }
   .day-header {
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--muted); padding: 14px 0 6px; font-weight: 600;
+    color: var(--muted); padding: 16px 0 6px; font-weight: 700;
   }
   .day-header:first-child { padding-top: 0; }
   .event-row {
-    display: grid;
-    grid-template-columns: 64px 12px 1fr auto;
-    align-items: center; gap: 10px;
-    padding: 10px 4px; border-bottom: 1px solid var(--border);
-    font-size: 14px;
+    display: grid; grid-template-columns: 64px 12px 1fr auto;
+    align-items: center; gap: 10px; padding: 11px 4px;
+    border-bottom: 1px solid var(--border); font-size: 14px;
   }
   .event-row:last-child { border-bottom: none; }
   .event-row .when { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .event-row .swatch {
-    width: 10px; height: 10px; border-radius: 999px; background: var(--muted);
-    justify-self: center;
-  }
+  .event-row .swatch { width: 10px; height: 10px; border-radius: 999px; background: var(--muted); justify-self: center; }
   .event-row[data-type="diaper"] .swatch { background: var(--c-diaper); }
   .event-row[data-type="feed_breast"] .swatch { background: var(--c-breast); }
   .event-row[data-type="feed_bottle"] .swatch { background: var(--c-bottle); }
@@ -206,80 +108,18 @@
   .event-row .summary { line-height: 1.4; }
   .event-row .summary .type {
     display: inline-block; font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.05em; color: var(--muted); margin-right: 8px;
-    font-weight: 600;
+    letter-spacing: 0.05em; color: var(--muted); margin-right: 8px; font-weight: 700;
   }
   .event-row .summary .detail { color: var(--ink); }
   .event-row .summary .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
   .event-row .summary .running {
     display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px;
-    background: var(--accent-soft); color: var(--accent); font-weight: 600; margin-left: 6px;
+    background: var(--accent-soft); color: var(--accent); font-weight: 700; margin-left: 6px;
   }
   .event-row .summary .pending {
     display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px;
-    background: #fff9db; color: #846200; font-weight: 600; margin-left: 6px;
+    background: rgba(201,138,32,0.16); color: #b9831f; font-weight: 700; margin-left: 6px;
   }
-  .event-row .row-actions { display: inline-flex; gap: 2px; }
-  .delete-x, .edit-x {
-    background: transparent; border: none; color: var(--muted);
-    cursor: pointer; font-size: 14px; padding: 4px 8px; border-radius: 6px;
-  }
-  .delete-x:hover { color: var(--danger); background: #fff0f0; }
-  .edit-x:hover   { color: var(--accent); background: var(--accent-soft); }
-
-  .empty { text-align: center; color: var(--muted); padding: 28px 0; font-size: 14px; }
-
-  .disclaimer {
-    font-size: 12px; color: var(--muted); line-height: 1.5;
-    text-align: center; padding: 14px 8px 0;
-  }
-
-  /* Modal */
-  .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(42, 26, 34, 0.4);
-    display: none; align-items: center; justify-content: center;
-    padding: 16px; z-index: 50;
-  }
-  .modal-backdrop.open { display: flex; }
-  .modal {
-    background: white; border-radius: 18px; padding: 22px;
-    width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    max-height: 90vh; overflow-y: auto;
-  }
-  .modal h3 { margin: 0 0 14px; font-size: 18px; }
-  .modal label {
-    display: block; font-size: 12px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.05em;
-    margin: 12px 0 4px; font-weight: 600;
-  }
-  .modal input, .modal select, .modal textarea {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-    border-radius: 10px; font-size: 15px; background: white; color: var(--ink); font-family: inherit;
-  }
-  .modal input:focus, .modal select:focus, .modal textarea:focus {
-    outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent);
-  }
-  .modal .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .modal .footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
-  .modal .primary {
-    background: var(--accent); color: white; border: none;
-    padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer;
-    font-family: inherit;
-  }
-  .modal .primary:hover { background: var(--accent-hover); }
-  .modal .secondary {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 10px 18px; border-radius: 999px; font-size: 14px; cursor: pointer;
-    font-family: inherit;
-  }
-  .modal .secondary:hover { color: var(--accent); border-color: var(--accent); }
-  .form-error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 18px; }
-  .share-url {
-    margin-top: 10px; padding: 12px; background: #f8fafc; border: 1px solid var(--border);
-    border-radius: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 12px; word-break: break-all; color: var(--ink);
-  }
-  .hint { font-size: 13px; color: var(--muted); line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -288,12 +128,7 @@
     <h1>Baby Tracker</h1>
     <p>Diapers, feeds, sleep, pumping — log it once, sync to every device.</p>
     <div id="syncPill" class="sync-pill">Loading…</div>
-    <div class="theme-picker" id="themePicker">
-      <button class="theme-swatch" data-theme="pink"   title="Pink"></button>
-      <button class="theme-swatch" data-theme="green"  title="Mù Green"></button>
-      <button class="theme-swatch" data-theme="blue"   title="Blue"></button>
-      <button class="theme-swatch" data-theme="purple" title="Purple"></button>
-    </div>
+    <button id="modeToggle" class="mode-toggle" type="button" aria-label="Toggle dark mode"></button>
     <div id="babyChipRow" style="margin-top: 10px;"></div>
     <div class="tools">
       <a href="../contractions/">Contraction tracker →</a>
@@ -373,11 +208,11 @@
   <div class="card" style="margin-top:16px;">
     <h2>Today</h2>
     <div class="stats">
-      <div class="stat"><div class="k">Diapers</div><div class="v" id="sDiapers">0</div><div class="sub" id="sDiapersSub">—</div></div>
-      <div class="stat"><div class="k">Breast feeds</div><div class="v" id="sBreast">0</div><div class="sub" id="sBreastSub">—</div></div>
-      <div class="stat"><div class="k">Bottles</div><div class="v" id="sBottle">0</div><div class="sub" id="sBottleSub">—</div></div>
-      <div class="stat"><div class="k">Sleep</div><div class="v" id="sSleep">0h</div><div class="sub">total today</div></div>
-      <div class="stat"><div class="k">Pumped</div><div class="v" id="sPump">0 oz</div><div class="sub" id="sPumpSub">—</div></div>
+      <div class="stat" data-widget="diaper"><div class="k">Diapers</div><div class="v" id="sDiapers">0</div><div class="sub" id="sDiapersSub">—</div></div>
+      <div class="stat" data-widget="breast"><div class="k">Breast feeds</div><div class="v" id="sBreast">0</div><div class="sub" id="sBreastSub">—</div></div>
+      <div class="stat" data-widget="bottle"><div class="k">Bottles</div><div class="v" id="sBottle">0</div><div class="sub" id="sBottleSub">—</div></div>
+      <div class="stat" data-widget="sleep"><div class="k">Sleep</div><div class="v" id="sSleep">0h</div><div class="sub">total today</div></div>
+      <div class="stat" data-widget="pump"><div class="k">Pumped</div><div class="v" id="sPump">0 oz</div><div class="sub" id="sPumpSub">—</div></div>
     </div>
   </div>
 
@@ -570,47 +405,12 @@
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { mountBabyUI } from "../shared/babies.js";
+import { initTheme } from "../shared/theme.js";
 
 // ---------- Config ----------
 const SUPABASE_URL = "https://xopkxnuokwqhclffiklq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_RyoVcrbDKdywZAAo7xrhJg_jO9PbHgX";
 const TABLE = "baby_events";
-const SETTINGS_TABLE = "tracker_settings";
-
-// ---------- Themes (shared with contractions) ----------
-const THEMES = {
-  pink:   { bg: "#fdf2f4", ink: "#2a1a22", muted: "#7a6770",
-            accent: "#d6336c", accentHover: "#c0265d", accentSoft: "#ffe3ec",
-            border: "#f1d9e0", rgb: "214, 51, 108" },
-  green:  { bg: "#f4f7f4", ink: "#1f2a20", muted: "#677a68",
-            accent: "#425743", accentHover: "#34452f", accentSoft: "#dfe9df",
-            border: "#dde6de", rgb: "66, 87, 67" },
-  blue:   { bg: "#f1f7fd", ink: "#13283c", muted: "#5a7387",
-            accent: "#1c7ed6", accentHover: "#1971c2", accentSoft: "#d0ebff",
-            border: "#cfe2f3", rgb: "28, 126, 214" },
-  purple: { bg: "#f6f1fd", ink: "#26183c", muted: "#6a5a87",
-            accent: "#7950f2", accentHover: "#6741d9", accentSoft: "#e5dbff",
-            border: "#e1d4f7", rgb: "121, 80, 242" },
-};
-const THEME_LS = "gennyTheme_v1"; // shared with contractions
-
-function applyTheme(name) {
-  const t = THEMES[name] || THEMES.pink;
-  const r = document.documentElement.style;
-  r.setProperty("--bg", t.bg);
-  r.setProperty("--ink", t.ink);
-  r.setProperty("--muted", t.muted);
-  r.setProperty("--accent", t.accent);
-  r.setProperty("--accent-hover", t.accentHover);
-  r.setProperty("--accent-soft", t.accentSoft);
-  r.setProperty("--border", t.border);
-  r.setProperty("--accent-rgb", t.rgb);
-  document.querySelectorAll(".theme-swatch").forEach(b => {
-    b.classList.toggle("selected", b.dataset.theme === name);
-  });
-  localStorage.setItem(THEME_LS, name);
-}
-applyTheme(localStorage.getItem(THEME_LS) || "pink");
 
 // ---------- Tracker key (shared with contractions, same household) ----------
 const KEY_LS = "gennyTrackerKey_v1";
@@ -644,6 +444,84 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: false },
   realtime: { params: { eventsPerSecond: 5 } },
 });
+
+// ---------- Theme (accent + light/dark, synced via Supabase) ----------
+const theme = initTheme({ sb, trackerKey, toggleButton: document.getElementById("modeToggle") });
+
+// ---------- Toast (quick confirmation after a one-tap log) ----------
+const toastWrap = document.createElement("div");
+toastWrap.className = "toast-wrap";
+document.body.appendChild(toastWrap);
+function toast(msg) {
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = msg;
+  toastWrap.appendChild(el);
+  setTimeout(() => { el.classList.add("leaving"); setTimeout(() => el.remove(), 320); }, 1700);
+}
+const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+
+// ---------- Trackable widgets (show/hide action cards + their stat tiles) ----
+const WIDGET_ITEMS = [
+  { key: "diaper", label: "Diapers" },
+  { key: "breast", label: "Breast feeds" },
+  { key: "bottle", label: "Bottles" },
+  { key: "sleep",  label: "Sleep" },
+  { key: "pump",   label: "Pumping" },
+];
+const ALL_WIDGETS = WIDGET_ITEMS.map(w => w.key);
+const WIDGETS_LS = "babyWidgets_v1";
+let enabledWidgets = loadWidgetsLocal();
+function loadWidgetsLocal() {
+  try {
+    const a = JSON.parse(localStorage.getItem(WIDGETS_LS) || "null");
+    if (Array.isArray(a)) return ALL_WIDGETS.filter(k => a.includes(k));
+  } catch {}
+  return [...ALL_WIDGETS];
+}
+function applyWidgets() {
+  const en = new Set(enabledWidgets);
+  for (const key of ALL_WIDGETS) {
+    const show = en.has(key);
+    document.querySelectorAll(
+      '.action-card[data-type="' + key + '"], .stat[data-widget="' + key + '"]'
+    ).forEach(el => { el.style.display = show ? "" : "none"; });
+  }
+}
+applyWidgets(); // run from local cache immediately to avoid a flash
+async function persistWidgets() {
+  localStorage.setItem(WIDGETS_LS, JSON.stringify(enabledWidgets));
+  try {
+    await sb.from("tracker_settings").upsert(
+      { tracker_key: trackerKey, baby_trackers: enabledWidgets },
+      { onConflict: "tracker_key" });
+  } catch (e) { console.warn("widgets save failed:", e.message); }
+}
+function setWidgets(arr) {
+  enabledWidgets = ALL_WIDGETS.filter(k => arr.includes(k));
+  applyWidgets();
+  persistWidgets();
+}
+function adoptWidgets(arr) {
+  if (!Array.isArray(arr)) return;
+  enabledWidgets = ALL_WIDGETS.filter(k => arr.includes(k));
+  localStorage.setItem(WIDGETS_LS, JSON.stringify(enabledWidgets));
+  applyWidgets();
+}
+// Load remote preference, then keep in sync across devices.
+(async () => {
+  try {
+    const { data, error } = await sb.from("tracker_settings")
+      .select("baby_trackers").eq("tracker_key", trackerKey).maybeSingle();
+    if (error) throw error;
+    if (data && Array.isArray(data.baby_trackers)) adoptWidgets(data.baby_trackers);
+  } catch (e) { console.warn("widgets load failed:", e.message); }
+})();
+sb.channel("baby_settings:" + trackerKey)
+  .on("postgres_changes",
+    { event: "*", schema: "public", table: "tracker_settings", filter: "tracker_key=eq." + trackerKey },
+    (payload) => { if (Array.isArray(payload.new?.baby_trackers)) adoptWidgets(payload.new.baby_trackers); })
+  .subscribe();
 
 // ---------- State ----------
 const state = {
@@ -767,6 +645,12 @@ mountBabyUI({
     if (error) throw error;
   },
   backfillNoun: "baby events",
+  mountAccent: (el) => theme.mountAccentSwatches(el),
+  trackerPrefs: {
+    items: WIDGET_ITEMS,
+    get: () => enabledWidgets,
+    set: (arr) => setWidgets(arr),
+  },
 });
 
 // ---------- Formatting ----------
@@ -903,6 +787,7 @@ document.querySelectorAll("[data-diaper]").forEach(btn => {
     insertLocally(row);
     state.outbox.push({ kind: "insert", row }); saveOutbox();
     render(); flushOutbox();
+    toast(cap(kind) + " diaper logged");
   });
 });
 
@@ -929,6 +814,7 @@ document.querySelectorAll("#breastSides [data-side]").forEach(chip => {
       saveActive();
       state.outbox.push({ kind: "insert", row }); saveOutbox();
       render(); flushOutbox();
+      toast("Feed started · " + cap(side));
     }
   });
 });
@@ -950,12 +836,14 @@ breastBtn.addEventListener("click", () => {
   state.outbox.push({ kind: "update", id: a.id, patch }); saveOutbox();
   state.active.feed_breast = null; saveActive();
   render(); flushOutbox();
+  toast("Feed ended · " + fmtDurShort(duration));
 });
 
 // ---------- Sleep ----------
 const sleepBtn = document.getElementById("sleepBtn");
 sleepBtn.addEventListener("click", () => {
   const a = state.active.sleep;
+  let msg = null;
   if (!a) {
     const now = new Date();
     const row = newRow("sleep", now, null, {});
@@ -963,6 +851,7 @@ sleepBtn.addEventListener("click", () => {
     state.active.sleep = { id: row.id, start_at: row.start_at };
     saveActive();
     state.outbox.push({ kind: "insert", row }); saveOutbox();
+    msg = "Sleep started";
   } else {
     const end = new Date();
     const duration = end.getTime() - new Date(a.start_at).getTime();
@@ -973,10 +862,12 @@ sleepBtn.addEventListener("click", () => {
       const patch = { end_at: end.toISOString(), duration_ms: duration };
       updateLocally(a.id, patch);
       state.outbox.push({ kind: "update", id: a.id, patch }); saveOutbox();
+      msg = "Slept " + fmtDurShort(duration);
     }
     state.active.sleep = null; saveActive();
   }
   render(); flushOutbox();
+  if (msg) toast(msg);
 });
 
 // ---------- Pump ----------
@@ -1017,6 +908,7 @@ function finalizePump(amountOz, side) {
   state.outbox.push({ kind: "update", id, patch }); saveOutbox();
   state.active.pump = null; saveActive();
   render(); flushOutbox();
+  toast("Pumped" + (amountOz != null ? " " + fmtOz(amountOz) : "") + " · " + fmtDurShort(duration));
 }
 document.getElementById("pumpEndSave").addEventListener("click", () => {
   const v = document.getElementById("pumpEndOz").value;
@@ -1064,6 +956,7 @@ document.getElementById("bottleSave").addEventListener("click", () => {
   state.outbox.push({ kind: "insert", row }); saveOutbox();
   bottleModal.classList.remove("open");
   render(); flushOutbox();
+  toast(fmtOz(oz) + " bottle logged");
 });
 
 // ---------- Universal event modal (add manually / edit) ----------
@@ -1195,9 +1088,11 @@ document.getElementById("evSave").addEventListener("click", () => {
     insertLocally(row);
     state.outbox.push({ kind: "insert", row }); saveOutbox();
   }
+  const wasEditing = !!state.editingId;
   evModal.classList.remove("open");
   state.editingId = null;
   render(); flushOutbox();
+  toast(typeLabel(type) + (wasEditing ? " updated" : " added"));
 });
 
 // ---------- Clear / Export / Share ----------
@@ -1417,35 +1312,6 @@ function render() {
   renderActiveStrip(Date.now());
 }
 
-// ---------- Theme load / save (shared with contractions) ----------
-async function loadTheme() {
-  try {
-    const { data, error } = await sb.from(SETTINGS_TABLE)
-      .select("theme").eq("tracker_key", trackerKey).maybeSingle();
-    if (error) throw error;
-    if (data?.theme) applyTheme(data.theme);
-  } catch (err) { console.warn("Theme load failed:", err.message); }
-}
-async function setTheme(name) {
-  if (!THEMES[name]) return;
-  applyTheme(name);
-  try {
-    await sb.from(SETTINGS_TABLE).upsert(
-      { tracker_key: trackerKey, theme: name }, { onConflict: "tracker_key" });
-  } catch (err) { console.warn("Theme save failed:", err.message); }
-}
-document.querySelectorAll(".theme-swatch").forEach(btn => {
-  btn.addEventListener("click", () => setTheme(btn.dataset.theme));
-});
-sb.channel("settings:" + trackerKey)
-  .on("postgres_changes",
-    { event: "*", schema: "public", table: SETTINGS_TABLE, filter: "tracker_key=eq." + trackerKey },
-    (payload) => {
-      const t = payload.new?.theme;
-      if (t && t !== (localStorage.getItem(THEME_LS) || "pink")) applyTheme(t);
-    })
-  .subscribe();
-
 // ---------- Realtime for baby_events ----------
 sb.channel("baby_events:" + trackerKey)
   .on("postgres_changes",
@@ -1489,7 +1355,6 @@ setInterval(() => { renderActionCards(); renderStats(); }, 30_000);
 // ---------- Initial load ----------
 setSync("saving", "Loading…");
 render();
-loadTheme();
 try {
   const localPending = [...state.events];
   const pendingIds = new Set(state.outbox.filter(o => o.kind === "insert").map(o => o.row.id));

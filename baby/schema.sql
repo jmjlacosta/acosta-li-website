@@ -92,3 +92,10 @@ alter table public.contractions add column if not exists baby_id uuid;
 
 create index if not exists baby_events_baby_idx  on public.baby_events  (baby_id);
 create index if not exists contractions_baby_idx on public.contractions (baby_id);
+
+-- Light/dark preference, synced alongside the accent (theme) per household.
+alter table public.tracker_settings add column if not exists mode text;
+
+-- Which baby widgets are shown (JSON array of keys: diaper, breast, bottle,
+-- sleep, pump). Null = show all. Synced per household.
+alter table public.tracker_settings add column if not exists baby_trackers jsonb;
