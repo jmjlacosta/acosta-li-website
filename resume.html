@@ -1,311 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Resume - Juan Acosta | Solutions Architect & Data Science Leadership</title>
-  <meta name="description" content="Resume for Juan Acosta - Solutions Architect and Data Science Leader specializing in GenAI, healthcare AI, and production ML systems." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-
-  <style>
-    :root{
-      --color-primary:#1e3a8a;--color-accent:#3b82f6;--color-text:#1e293b;--color-text-light:#64748b;
-      --font-display:'Playfair Display', Georgia, serif;--font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:var(--font-body);
-      background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);
-      color:var(--color-text);
-      line-height:1.6;
-    }
-
-    /* Navbar */
-    .navbar{
-      background:#fff;
-      padding:20px 40px;
-      box-shadow:0 2px 10px rgba(0,0,0,.05);
-      position:sticky;top:0;z-index:100;
-    }
-    .navbar-content{
-      max-width:1100px;margin:0 auto;
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-    }
-    .navbar-brand{
-      font-family:var(--font-display);
-      font-size:1.5rem;color:var(--color-primary);font-weight:700;text-decoration:none;
-    }
-    .navbar-links{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .navbar-links a{color:var(--color-text);text-decoration:none;font-weight:500;transition:color .2s ease}
-    .navbar-links a:hover{color:var(--color-accent)}
-
-    /* Export dropdown */
-    .dropdown{position:relative}
-    .dropdown-toggle{
-      background:var(--color-primary);color:#fff;border:none;border-radius:6px;padding:8px 12px;cursor:pointer;font-size:.9rem;font-weight:600
-    }
-    .dropdown-toggle:hover{background:var(--color-accent)}
-    .dropdown-menu{
-      position:absolute;right:0;top:110%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;
-      box-shadow:0 8px 24px rgba(0,0,0,.08);min-width:240px;padding:6px;display:none;z-index:200
-    }
-    .dropdown.open .dropdown-menu{display:block}
-    .dropdown-item{
-      display:block;width:100%;text-align:left;background:transparent;border:none;
-      padding:10px 12px;cursor:pointer;font:inherit;color:var(--color-text);text-decoration:none
-    }
-    .dropdown-item:hover{background:#f1f5f9}
-
-    /* Layout */
-    .container{max-width:900px;margin:0 auto;padding:60px 40px}
-    .resume-header{text-align:center;margin-bottom:40px;padding-bottom:20px;border-bottom:3px solid var(--color-accent)}
-    .resume-name{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,3.2rem);color:var(--color-primary);margin-bottom:6px}
-    .resume-contact{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;color:var(--color-text-light)}
-    .resume-contact a{color:var(--color-accent);text-decoration:none}
-
-    .resume-summary{
-      background:#fff;padding:26px;border-radius:10px;margin:30px 0 36px;border-left:4px solid var(--color-accent);
-      box-shadow:0 2px 10px rgba(0,0,0,.05)
-    }
-    .resume-summary p{line-height:1.8}
-    .resume-summary strong{color:var(--color-primary)}
-
-    .section{margin-bottom:40px}
-    .section-title{font-family:var(--font-display);font-size:1.6rem;color:var(--color-primary);margin-bottom:16px;border-bottom:2px solid var(--color-accent);padding-bottom:6px}
-
-    .experience-item{margin-bottom:24px;padding-left:18px;border-left:3px solid var(--color-accent)}
-    .experience-title{font-size:1.15rem;font-weight:600;color:var(--color-primary)}
-    .experience-company{font-weight:500}
-    .experience-company a{color:var(--color-text);text-decoration:none}
-    .experience-company a:hover{color:var(--color-accent)}
-    .experience-date{font-size:.95rem;color:var(--color-text-light);font-style:italic;margin:4px 0 8px}
-    .experience-description li{margin-bottom:6px;color:var(--color-text-light);line-height:1.55}
-
-    /* Education inline layout */
-    .education-list{list-style:none}
-    .education-list li{margin-bottom:8px}
-    .education-line{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
-    .education-degree{font-weight:600;color:var(--color-primary)}
-    .education-sep{color:var(--color-text-light)}
-    .education-school{color:var(--color-text)}
-
-    /* Footer */
-    .site-footer{
-      max-width:900px;margin:10px auto 40px;padding:0 40px;
-      color:var(--color-text-light);font-size:.9rem;text-align:center
-    }
-
-    @media (max-width:768px){
-      .navbar{padding:15px 20px}
-      .navbar-content{flex-direction:column;gap:14px}
-      .container{padding:40px 20px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juan Acosta — Resume</title>
+<meta name="description" content="Resume of Juan Acosta: data science and AI leadership across healthcare, finance, education, and security. Austin, TX.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121814'/%3E%3Crect x='9' y='7' width='14' height='18' fill='%238FBE9B'/%3E%3C/svg%3E">
+<meta property="og:title" content="Resume — Juan Acosta">
+<meta property="og:description" content="Data science and AI leadership across healthcare, finance, education, and security. Austin, TX.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://acosta-li.com/resume.html">
+<meta property="og:url" content="https://acosta-li.com/resume.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/resume.css">
+<script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-content">
-      <a href="index.html" class="navbar-brand">Juan Acosta</a>
-      <div class="navbar-links">
-        <a href="index.html">Home</a>
-        <a href="resume.html" aria-current="page">Resume</a>
-        <a href="https://www.linkedin.com/in/juan-acosta-556a39108/" target="_blank" rel="noopener">LinkedIn</a>
 
-        <!-- Export dropdown: links directly to prebuilt files -->
-        <div class="dropdown" id="exportDropdown">
-          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">⬇ Export</button>
-          <div class="dropdown-menu" role="menu" aria-label="Export options">
-            <a class="dropdown-item" role="menuitem" href="Juan_Acosta_Resume.md" download>Download as MD (.md)</a>
-            <a class="dropdown-item" role="menuitem" href="Juan_Acosta_Resume.pdf" download>Download as PDF (.pdf)</a>
-          </div>
-        </div>
-      </div>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="wordmark" href="index.html">ACOSTA&#8209;LI</a>
+    <div class="nav__links">
+      <a href="work/">Work</a>
+      <a href="services/">Services</a>
+      <a href="resume.html" aria-current="page">Resume</a>
+      <a href="contact/">Contact</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <div class="container" id="resume-root">
-    <div class="resume-header">
-      <h1 class="resume-name">Juan Acosta</h1>
+<main id="main">
+
+  <header class="resume-head">
+    <div class="resume-body" style="padding-block: 0;">
+      <p class="eyebrow">Resume</p>
+      <h1 class="display d-lg">Juan Acosta</h1>
       <div class="resume-contact">
-        <a href="mailto:juan@acosta-li.com">juan@acosta-li.com</a><span>•</span>
-        <a href="tel:512-222-9438">512-222-9438</a><span>•</span>
+        <a href="mailto:juan@acosta-li.com">juan@acosta-li.com</a>
+        <a href="tel:512-222-9438">512&#8209;222&#8209;9438</a>
         <span>Austin, TX</span>
+        <a href="https://www.linkedin.com/in/juan-acosta-556a39108/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="btn-row resume-actions" style="margin-top: 2rem;">
+        <a class="btn" href="Juan_Acosta_Resume.pdf" download>Download PDF <span class="btn__arrow">&#8595;</span></a>
+        <a class="btn btn--ghost" href="Juan_Acosta_Resume.md" download>Markdown</a>
+        <a class="btn btn--ghost" href="resume_ats.html">Plain&#8209;text version</a>
       </div>
     </div>
+  </header>
 
-    <!-- Intro: visible on site, omitted from downloads by design since files are prebuilt -->
-    <div class="resume-summary">
-      <p>
-        Technical leader specializing in <strong>architecting and deploying end-to-end AI/ML systems</strong> from prototype to production scale. Led technical delivery for <strong>30+ enterprise clients</strong>, managing full lifecycle from requirements to deployment. Built <strong>production GenAI systems</strong> (A2A, MCP) and ML infrastructure serving <strong>2M+ daily predictions</strong> in healthcare, delivering <strong>$81M+ in measurable outcomes</strong>. Experienced in distributed training, real-time ML systems, and cross-functional leadership.
-      </p>
-    </div>
+  <div class="resume-body">
 
-    <!-- Professional Experience -->
-    <div class="section" id="section-experience">
-      <h2 class="section-title">Professional Experience</h2>
+    <section class="r-section">
+      <h2>Summary</h2>
+      <p class="r-summary"><strong>AI architect and data science leader</strong> who takes systems
+      from prototype to production in regulated environments. Architected and built
+      <strong>Project LOOM</strong>, a clinical trial documentation system validated and tested by
+      Duke Clinical Research Institute, alongside production multi&#8209;agent systems for oncology
+      summarization and payor appeals. Previously led a <strong>10+ person data science
+      organization</strong> and built a startup's professional services arm into a profitable line
+      of business, delivering ML that served <strong>2M+ daily predictions</strong> across
+      <strong>10M+ Medicare and Medicaid lives</strong> and contributed to <strong>$81M+ in Medicare
+      Trust Fund savings</strong>.</p>
+    </section>
 
-      <div class="experience-item">
-        <div class="experience-title">Director of Data Science</div>
-        <div class="experience-company"><a href="https://www.healthuniverse.com/" target="_blank" rel="noopener">Health Universe</a></div>
-        <div class="experience-date">October 2024 — Present</div>
-        <ul class="experience-description">
-          <li>Build multi-agent systems using a custom ADK and MCP; automate clinical trial documentation, oncology summaries, and data extraction.</li>
-          <li>Lead pre- and post-sales client engagements, translating executive-level deliverables into actionable engineering and data-science workstreams.</li>
-          <li>Fine-tune LLMs for medical NER to support patient summaries, prior authorizations, and recruitment.</li>
+    <section class="r-section">
+      <h2>Professional Experience</h2>
+
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Founder &amp; Principal Consultant</span>
+          <span class="role__co">Acosta&#8209;Li LLC</span>
+          <span class="role__date">October 2024 — Present</span>
+        </div>
+        <ul>
+          <li>Lead development of <strong>Lucy</strong>, a multi&#8209;agent strategy advisor for
+          postsecondary transformation (Google ADK, Azure OpenAI, A2A) — institution matching across
+          7,000+ NCES records, transformation&#8209;stage inference, and semantic retrieval over a
+          curated research corpus. AI tools for education at the
+          <strong>Bill &amp; Melinda Gates Foundation</strong>, subcontracted through Alithi
+          Management Consulting (December 2025 – present).</li>
+          <li>Advise <strong>Sylvan Labs</strong> on applied AI (January 2026 – present); engagement
+          expanded into hands&#8209;on delivery in 2026.</li>
+          <li>Built and maintain <strong>Atlas Mineral</strong> for Alpax, a B2B SaaS platform for
+          precious metal order reporting and tracking running $1M+ monthly.</li>
+          <li>Prior engagements include <strong>SpyCloud</strong> (supply chain attack vulnerability),
+          <strong>Capital Pulse</strong> (financial risk and forecasting), and <strong>Beheld</strong>.
+          Manage a bench of 4 data scientists and 2 project managers.</li>
         </ul>
       </div>
 
-      <div class="experience-item">
-        <div class="experience-title">Founder & Principal Consultant</div>
-        <div class="experience-company">Acosta-Li LLC</div>
-        <div class="experience-date">August 2024 — Present</div>
-        <ul class="experience-description">
-          <li>Partner with Alithi Management Consulting to lead AI tools development for education at a large non-profit.</li>
-          <li>Manage Atlas Mineral, a B2B SaaS platform for precious metal order reporting and tracking ($1M+ monthly).</li>
-          <li>Manage 4 data scientists and 2 project managers across healthcare, finance, and cybersecurity engagements.</li>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Director of Data Science</span>
+          <span class="role__co"><a href="https://www.healthuniverse.com/" target="_blank" rel="noopener">Health Universe</a></span>
+          <span class="role__date">October 2024 — July 2026</span>
+        </div>
+        <p class="role__note">Began as a client engagement through Acosta&#8209;Li; full&#8209;time April 2025 – July 2026.</p>
+        <ul>
+          <li><strong>AI architect and primary developer of Project LOOM</strong>, an i&#8209;Cubed Center
+          clinical trial documentation system validated and tested by Duke Clinical Research
+          Institute — generates protocols, manuals of procedures, safety plans, and recruitment
+          materials as one consistent set, detecting contradictions introduced by edits.</li>
+          <li>Built an oncology summarization system that ingests complete patient records,
+          disambiguates among multiple primaries, and assembles a full clinical history per cancer.</li>
+          <li>Built an agent&#8209;to&#8209;agent clinical appeals system that submits and appeals pathology
+          invoices to payors, pre&#8209;screening justifications for likely denials and surfacing
+          supporting evidence from patient history.</li>
+          <li>Led pre- and post-sales client engagements; fine-tuned LLMs for medical NER supporting
+          patient summaries, prior authorizations, and trial recruitment.</li>
         </ul>
       </div>
 
-      <!-- Babson ABOVE ClosedLoop -->
-      <div class="experience-item">
-        <div class="experience-title">Senior Manager, Data Operations</div>
-        <div class="experience-company"><a href="https://betterway.com/media-coverage/2024-07-30-wall-street-journal" target="_blank" rel="noopener">Babson Diagnostics</a></div>
-        <div class="experience-date">August 2022 — August 2024</div>
-        <ul class="experience-description">
-          <li>Deployed real-time ML for algorithmic platelet counting (Docker, MongoDB, Python) with integrations linking Sysmex analyzers, LIS, and Salesforce.</li>
-          <li>Led pipelines for order tracking, sample lifecycle, and financial monitoring with 1,000+ daily sample capacity.</li>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Senior Manager, Data Operations</span>
+          <span class="role__co"><a href="https://betterway.com/media-coverage/2024-07-30-wall-street-journal" target="_blank" rel="noopener">Babson Diagnostics</a></span>
+          <span class="role__date">April 2024 — August 2024</span>
+        </div>
+        <p class="role__note">Client of ClosedLoop.ai from 2022; joined full&#8209;time in 2024 to complete the program.</p>
+        <ul>
+          <li>Developed and operationalized the algorithmic platelet assay — real&#8209;time ML (Docker,
+          MongoDB, Python) taking small&#8209;volume platelet counting from research prototype to
+          commercial launch — with integrations linking Sysmex analyzers, LIS, and Salesforce; led
+          pipelines for order tracking, sample lifecycle, and financial monitoring at 1,000+ daily
+          samples.</li>
         </ul>
       </div>
 
-      <div class="experience-item">
-        <div class="experience-title">Manager, Data Science</div>
-        <div class="experience-company"><a href="https://www.closedloop.ai/awards-recognition" target="_blank" rel="noopener">ClosedLoop.ai</a></div>
-        <div class="experience-date">June 2021 — August 2022</div>
-        <ul class="experience-description">
-          <li>Technical advisor for 30+ enterprise clients from pre-sales through deployment; led requirements, demos, and executive briefings.</li>
-          <li>Architected distributed ML pipelines on AWS (SageMaker, Jenkins CI/CD) powering 2M+ daily predictions across concurrent deployments.</li>
-          <li>Designed predictive models for disease progression and admissions contributing to <strong>$81M+</strong> in Medicare savings.</li>
-          <li>Built EHR/FHIR → SQL pipelines with feature engineering and cohort logic; developed drift/bias monitoring.</li>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Manager, Data Science</span>
+          <span class="role__co"><a href="https://www.closedloop.ai/awards-recognition" target="_blank" rel="noopener">ClosedLoop.ai</a></span>
+          <span class="role__date">June 2021 — March 2024</span>
+        </div>
+        <p class="role__note">Reported directly to the CEO as a non&#8209;voting member of the executive team; no CTO in place.</p>
+        <ul>
+          <li>Led the data science organization (<strong>10+ data scientists, engineers, and project
+          managers</strong>) and built the professional services team into a profitable line of
+          business; technical advisor for 30+ enterprise clients from pre-sales through deployment.</li>
+          <li>Architected distributed ML pipelines on AWS (SageMaker, Jenkins CI/CD) powering
+          <strong>2M+ daily predictions</strong>; built EHR/FHIR → SQL pipelines with feature
+          engineering, cohort logic, and drift and bias monitoring.</li>
+          <li>Designed predictive models for disease progression and admissions contributing to
+          <strong>$81M+</strong> in Medicare savings; platform took Best in KLAS for healthcare
+          AI/ML, 2021–2023.</li>
         </ul>
       </div>
 
-      <div class="experience-item">
-        <div class="experience-title">Software Engineer</div>
-        <div class="experience-company">Perfaware</div>
-        <div class="experience-date">July 2020 — June 2021</div>
-        <ul class="experience-description">
-          <li>Built scalable backend systems for pharmacy curbside pickup and order management during COVID-19.</li>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Software Engineer</span>
+          <span class="role__co">Perfaware</span>
+          <span class="role__date">July 2020 — June 2021</span>
+        </div>
+        <ul>
+          <li>Built scalable backend systems for pharmacy curbside pickup and order management during
+          COVID-19.</li>
         </ul>
       </div>
 
-      <div class="experience-item">
-        <div class="experience-title">Data Researcher</div>
-        <div class="experience-company">Project SEED, University of Texas at Austin</div>
-        <div class="experience-date">2018 — 2020</div>
-        <ul class="experience-description">
-          <li>Developed and deployed a regression model for pediatric prehypertension prediction integrated into clinical decisions.</li>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Data Researcher</span>
+          <span class="role__co">Project SEED, University of Texas at Austin</span>
+          <span class="role__date">2018 — 2020</span>
+        </div>
+        <ul>
+          <li>Developed and deployed a regression model for pediatric prehypertension prediction
+          integrated into clinical decisions.</li>
         </ul>
       </div>
-    </div>
+    </section>
 
-    <!-- Non-Technical Experience -->
-    <div class="section" id="section-nontechnical">
-      <h2 class="section-title">Non-Technical Experience</h2>
-
-      <div class="experience-item">
-        <div class="experience-title">Co-Founder & Director of Coffee</div>
-        <div class="experience-company"><a href="https://mucoffeeatx.com" target="_blank" rel="noopener">Mù Coffee ATX</a></div>
-        <div class="experience-date">February 2025 — Present</div>
-        <ul class="experience-description">
-          <li>Co-founded specialty coffee shop showcasing Chinese-inspired drinks; oversee operations, finance, and performance tracking.</li>
+    <section class="r-section">
+      <h2>Selected Recognition &amp; Publications</h2>
+      <div class="role">
+        <ul>
+          <li>Model work presented at the <strong>Heart Failure Society of America</strong> and the
+          <strong>American Diabetes Association</strong>; published in the <strong>Journal of
+          Cardiac Failure</strong>.</li>
+          <li>Preventative health programs built on this work recognized by <strong>NAACOS</strong>;
+          coverage in the <strong>Wall Street Journal</strong>.</li>
+          <li><strong>Best in KLAS</strong>, Healthcare AI/ML (ClosedLoop.ai), 2021&ndash;2023 —
+          ranked above Epic and Cerner.</li>
+          <li>Project LOOM validated and tested by <strong>Duke Clinical Research
+          Institute</strong>.</li>
         </ul>
       </div>
+    </section>
 
-      <div class="experience-item">
-        <div class="experience-title">Professional Soccer Player (Left Wing)</div>
-        <div class="experience-company">Baruta FC — Venezuelan liga FUTVE</div>
-        <div class="experience-date">2009 Season</div>
-        <ul class="experience-description">
-          <li>Competed at a professional level during the 2009 season.</li>
-        </ul>
-      </div>
-    </div>
 
-    <!-- Education (degree — school on one line) -->
-    <div class="section" id="section-education">
-      <h2 class="section-title">Education</h2>
-      <ul class="education-list">
-        <li>
-          <div class="education-line">
-            <span class="education-degree">M.S. Computer Science</span>
-            <span class="education-sep">—</span>
-            <span class="education-school">Boston University</span>
-          </div>
-        </li>
-        <li>
-          <div class="education-line">
-            <span class="education-degree">B.S. Mathematics | B.A. Economics</span>
-            <span class="education-sep">—</span>
-            <span class="education-school">The University of Texas at Austin</span>
-          </div>
-        </li>
+    <section class="r-section">
+      <h2>Education</h2>
+      <ul class="edu-list">
+        <li><b>M.S. Computer Science</b> <span>— Boston University</span></li>
+        <li><b>B.S. Mathematics | B.A. Economics</b> <span>— The University of Texas at Austin</span></li>
       </ul>
-    </div>
+    </section>
 
-    <!-- Skills -->
-    <div class="section" id="section-skills">
-      <h2 class="section-title">Skills</h2>
-      <div class="skills-grid">
-        <div class="skills-category">
-          <h3>Foundation Models & GenAI</h3>
-          <p>LLM Orchestration (LiteLLM, LangChain, LangGraph), Agentic Workflows (Google ADK, OpenAI Swarm), Fine-tuning (medical NER), Prompt Engineering, Cost Optimization, RAG, MCP, Evaluation (inspect-ai)</p>
+    <section class="r-section">
+      <h2>Technical Skills</h2>
+      <div class="skills">
+        <div class="skill">
+          <h3>GenAI &amp; agentic systems</h3>
+          <p>Multi-agent orchestration (A2A protocol, Google ADK, MCP, LangGraph), LLM routing (LiteLLM), RAG and hybrid retrieval, fine-tuning (medical NER), evals (inspect-ai), observability (Langfuse), inference cost optimization</p>
         </div>
-        <div class="skills-category">
-          <h3>ML & Data Science</h3>
-          <p>TensorFlow, PyTorch (CUDA/GPU), Scikit-learn, Pandas, NumPy, Distributed Training, Custom Model Monitoring, Bias Detection, Ensemble Methods</p>
+        <div class="skill">
+          <h3>Healthcare data</h3>
+          <p>FHIR, HL7, X12 EDI 837/835, ICD-10, CPT/HCPCS, LOINC, SNOMED, RxNorm, EHR integration, HIPAA/PHI-aware design</p>
         </div>
-        <div class="skills-category">
-          <h3>Cloud Architecture & Infrastructure</h3>
-          <p><strong>AWS:</strong> SageMaker, Lambda, EC2, S3, Jenkins CI/CD<br>
-             <strong>GCP:</strong> Vertex AI, Cloud Run, BigQuery<br>
-             <strong>Infra:</strong> Docker, Kubernetes, VMware, MongoDB, PostgreSQL, Snowflake</p>
+        <div class="skill">
+          <h3>ML &amp; data science</h3>
+          <p>PyTorch, Hugging Face Transformers, scikit-learn, TensorFlow, Spark, SHAP, drift and bias monitoring</p>
         </div>
-        <div class="skills-category">
-          <h3>Programming & Development</h3>
-          <p>Python, Pydantic, Java, SQL, Spark, R, FastAPI (production APIs), Streamlit, Svelte, Vercel, RESTful API Design</p>
-        </div>
-        <div class="skills-category">
-          <h3>Data Engineering & Pipelines</h3>
-          <p>EHR/FHIR Integration, Real-time Data Processing, ETL Design, Feature Engineering, Apache, System Design</p>
+        <div class="skill">
+          <h3>Platforms &amp; cloud</h3>
+          <p>Python, TypeScript, SQL, R, Rust — FastAPI, Next.js, React, Svelte — PostgreSQL, MongoDB, Snowflake, AWS (SageMaker, Lambda, S3), Azure (Azure OpenAI, Cosmos DB), GCP (Vertex AI, BigQuery), Docker, Kubernetes, GitHub Actions</p>
         </div>
       </div>
+    </section>
+
+    <section class="r-section">
+      <h2>Also</h2>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Co-Founder &amp; Director of Coffee</span>
+          <span class="role__co"><a href="https://mucoffeeatx.com" target="_blank" rel="noopener">Mù Coffee ATX</a></span>
+          <span class="role__date">February 2025 — Present</span>
+        </div>
+        <ul>
+          <li>Co-founded a specialty coffee shop and importer of Chinese coffee, running sourcing and
+          import logistics end to end; oversee operations, finance, and performance tracking.</li>
+        </ul>
+      </div>
+      <div class="role">
+        <div class="role__top">
+          <span class="role__title">Professional Soccer Player (Left Wing)</span>
+          <span class="role__co">Baruta FC — Venezuelan liga FUTVE</span>
+          <span class="role__date">2009 Season</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__grid">
+      <div>
+        <a class="wordmark" href="index.html" style="color: var(--paper);">ACOSTA&#8209;LI</a>
+        <p style="margin-top: 1rem; max-width: 32ch;">Applied AI and data science for healthcare, finance, education, and security. Austin, Texas.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="work/">Work</a></li>
+          <li><a href="services/">Services</a></li>
+          <li><a href="contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:juan@acosta-li.com">juan@acosta-li.com</a></li>
+          <li><a href="tel:512-222-9438">512&#8209;222&#8209;9438</a></li>
+          <li><a href="https://www.linkedin.com/in/juan-acosta-556a39108/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
     </div>
+    <hr class="rule" style="margin-block: 2.5rem 1.5rem;">
+    <p style="font-size: 0.8rem;">&copy; 2026 Acosta&#8209;Li LLC &nbsp;&middot;&nbsp; Last updated July 2026</p>
   </div>
+</footer>
 
-  <!-- On-screen footer -->
-  <div class="site-footer">
-    Last updated: January 2026
-  </div>
-
-  <script>
-    // Lightweight dropdown behavior (no generation logic needed)
-    (function(){
-      const d = document.getElementById('exportDropdown');
-      const btn = d.querySelector('.dropdown-toggle');
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        d.classList.toggle('open');
-        btn.setAttribute('aria-expanded', d.classList.contains('open') ? 'true' : 'false');
-      });
-      document.addEventListener('click', () => d.classList.remove('open'));
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') d.classList.remove('open'); });
-    })();
-  </script>
 </body>
 </html>

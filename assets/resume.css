@@ -1,0 +1,97 @@
+/* Resume page — inherits tokens from site.css, adds document-style layout
+   plus a print sheet, since this page is expected to be printed and saved. */
+
+.resume-head { background: var(--ink); color: var(--paper); padding-block: clamp(3rem, 7vw, 5rem); }
+.resume-head h1 { letter-spacing: -0.04em; }
+.resume-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: rgba(247, 244, 250, 0.7);
+}
+.resume-contact a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(247, 244, 250, 0.3); }
+.resume-contact a:hover { color: var(--paper); border-bottom-color: var(--moss-soft); }
+
+.resume-body { max-width: 62rem; margin-inline: auto; padding-inline: var(--gut); padding-block: clamp(3rem, 6vw, 4.5rem); }
+
+.r-section { margin-bottom: clamp(2.75rem, 5vw, 4rem); }
+.r-section > h2 {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #3D5243;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 1.75rem;
+}
+
+.r-summary { font-size: 1.05rem; line-height: 1.55; max-width: 68ch; text-wrap: pretty; }
+
+.role { margin-bottom: 2rem; break-inside: avoid; }
+.role:last-child { margin-bottom: 0; }
+.role__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; }
+.role__title { font-family: var(--display); font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; }
+.role__co { font-weight: 600; color: var(--pine); }
+.role__co a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(59, 22, 112, 0.3); }
+.role__date {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  white-space: nowrap;
+}
+.role__note { font-size: 0.88rem; color: var(--slate); font-style: italic; margin-top: 0.35rem; }
+.role ul { margin-top: 0.85rem; }
+.role li { position: relative; padding-left: 1.1rem; margin-bottom: 0.5rem; font-size: 0.96rem; line-height: 1.55; }
+.role li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 0.4rem; height: 0.4rem; background: var(--moss); }
+.role li strong { font-weight: 600; }
+
+.edu-list li { display: flex; flex-wrap: wrap; gap: 0.25rem 0.6rem; margin-bottom: 0.6rem; font-size: 1rem; }
+.edu-list b { font-weight: 600; }
+.edu-list span { color: var(--slate); }
+
+.skills { display: grid; gap: 1.5rem; }
+@media (min-width: 44rem) { .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.skill h3 { font-family: var(--mono); font-weight: 500; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--slate); margin-bottom: 0.5rem; }
+.skill p { font-size: 0.92rem; line-height: 1.55; }
+
+/* --- Print --------------------------------------------------------------- */
+/* Print: rem-based screen sizes are root-relative and ignore the body size, so
+   every dimension that matters is restated in pt to land this on two pages. */
+@media print {
+  @page { margin: 11mm; }
+  .nav, .footer, .resume-actions, .skip, .resume-head .eyebrow { display: none !important; }
+  body { background: #fff; color: #000; font-size: 9pt; line-height: 1.32; }
+
+  .resume-head { background: #fff; color: #000; padding-block: 0; }
+  .resume-head h1 { font-size: 22pt; }
+  .resume-contact { color: #333; font-size: 8pt; margin-top: 4pt; gap: 3pt 12pt; }
+  .resume-contact a { border: 0; }
+
+  .resume-body { padding-block: 8pt 0; max-width: none; }
+  .r-section { margin-bottom: 9pt; }
+  .r-section > h2 { color: #000; border-color: #000; font-size: 8.5pt; padding-bottom: 2pt; margin-bottom: 7pt; }
+  .r-summary { font-size: 9pt; }
+
+  .role { margin-bottom: 8pt; }
+  .role__title { font-size: 10.5pt; }
+  .role__co { color: #000; font-size: 9.5pt; }
+  .role__date { font-size: 8pt; }
+  .role__note { font-size: 8pt; margin-top: 1pt; }
+  .role ul { margin-top: 4pt; }
+  .role li { font-size: 9pt; margin-bottom: 2.5pt; padding-left: 9pt; line-height: 1.32; }
+  .role li::before { background: #000; width: 3pt; height: 3pt; top: 0.5em; }
+
+  .edu-list li { font-size: 9pt; margin-bottom: 2pt; }
+  .skills { gap: 7pt 16pt; }
+  .skill h3 { font-size: 7.5pt; margin-bottom: 2pt; }
+  .skill p { font-size: 8.5pt; line-height: 1.3; }
+
+  a { color: #000 !important; }
+}
