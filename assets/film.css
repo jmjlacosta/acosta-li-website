@@ -1,0 +1,255 @@
+/* Prototype D: the mural wall from the disco-ball photo.
+   Chalky wall, mustard sun, burnt orange, navy, sky-blue waves, warm bulbs, film grain. */
+:root{
+  --wall:#F2EFE8; --paper:#FBF9F4; --ink:#1B1916; --night:#15130F; --muted:#5E584E;
+  --sun:#E9A23B; --rust:#C4552B; --navy:#1F2C52; --sky:#8CC4E2; --bulb:#FFC66B;
+  --display:"Fraunces",Georgia,serif; --sans:"DM Sans",system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--wall);color:var(--ink);font-family:var(--sans);font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* film grain over everything */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.13;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+img{max-width:100%;display:block}a{color:inherit}p{margin:0}h1,h2,h3{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.d{font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:700;letter-spacing:-.02em;line-height:1.02}
+.it{font-family:var(--display);font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:500}
+
+/* string lights along the top */
+.lights{height:46px;background:var(--night);position:relative;overflow:hidden}
+.lights svg{position:absolute;inset:0;width:100%;height:100%}
+.nav{background:var(--night);color:var(--paper);padding:0 0 22px}
+.nav__in{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:700;font-size:1.35rem;text-decoration:none}
+.logo span{color:var(--sun)}
+.nav ul{display:flex;gap:6px 26px;flex-wrap:wrap;list-style:none;margin:0;padding:0}
+.nav ul a{text-decoration:none;color:rgba(251,249,244,.75);font-weight:500}.nav ul a:hover{color:var(--bulb)}
+
+/* hero: the mural */
+.hero{position:relative;padding:70px 0 90px}
+.mural{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.mural svg{position:absolute}
+.sunshape{width:min(560px,48vw);right:max(-120px,calc(50% - 680px));top:40px}
+.waves{height:640px;right:max(4px,calc(50% - 600px));top:-60px}
+.hero__in{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.hi{font-size:1.6rem;color:var(--rust);margin-bottom:10px}
+.hero h1{font-size:clamp(2.7rem,6vw,4.6rem)}
+.hero h1 .sun{color:var(--rust)}
+.lede{font-size:1.18rem;color:var(--muted);max-width:50ch;margin-top:22px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-block;padding:14px 24px;border-radius:999px;background:var(--navy);color:var(--paper);font-weight:700;text-decoration:none;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px) rotate(-1deg);background:var(--rust)}
+.btn.alt{background:var(--sun);color:var(--ink)}.btn.alt:hover{background:var(--bulb)}
+
+/* the photo as a film print */
+.print{background:var(--paper);padding:14px 14px 54px;box-shadow:0 2px 0 rgba(0,0,0,.05),0 34px 60px -28px rgba(27,25,22,.55);transform:rotate(2.2deg);position:relative;max-width:460px;justify-self:center}
+.print img{width:100%;height:auto;aspect-ratio:1}
+.print figcaption{position:absolute;left:18px;right:18px;bottom:14px;font-family:var(--display);font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;font-size:1.05rem;color:var(--muted)}
+.print .stamp{position:absolute;right:26px;bottom:66px;font:700 .8rem/1 ui-monospace,monospace;color:#FF9A3C;letter-spacing:.08em;text-shadow:0 0 6px rgba(255,140,40,.7)}
+
+/* sections */
+.sec{padding:76px 0}
+.kicker{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.kicker::before{content:"";width:26px;height:10px;border-radius:999px;background:var(--sun)}
+.now{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{border-radius:26px;padding:28px;position:relative;overflow:hidden}
+.card b{display:block;font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-size:1.45rem;line-height:1.15;margin-bottom:8px}
+.card p{font-size:1rem}
+.c-sun{background:var(--sun)}.c-sky{background:var(--sky)}.c-rust{background:var(--rust);color:var(--paper)}
+.card::after{content:"";position:absolute;right:-30px;bottom:-30px;width:110px;height:110px;border-radius:50%;border:10px solid rgba(255,255,255,.28)}
+
+.why{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.why h2{font-size:clamp(2.1rem,4vw,3.1rem)}
+.why h2 .it{color:var(--rust)}
+.prose{color:var(--muted);font-size:1.08rem}
+
+/* night section: things I love, under the disco ball */
+.night{background:var(--night);color:var(--paper);position:relative;overflow:hidden}
+.night .kicker{color:var(--sky)}
+.night h2{font-size:clamp(2.2rem,4.4vw,3.4rem);max-width:16ch}
+.night h2 .it{color:var(--bulb)}
+.disco{position:absolute;right:6%;top:-20px;width:150px;opacity:.9}
+.loves{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:44px}
+.love{border:1.5px solid rgba(251,249,244,.16);border-radius:26px;padding:30px}
+.love h3{font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:600;font-size:1.5rem;margin-bottom:8px}
+.love p{color:rgba(251,249,244,.74)}
+.love:nth-child(1) h3{color:var(--sun)}.love:nth-child(2) h3{color:var(--sky)}.love:nth-child(3) h3{color:#F08A5D}.love:nth-child(4) h3{color:var(--bulb)}
+.love a{color:var(--bulb)}
+.mu{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:center;margin-top:56px}
+.mu .print{transform:rotate(-2deg);max-width:none;padding-bottom:50px}
+.mu .print{max-width:400px}.mu .print img{aspect-ratio:2/3;object-fit:cover}
+
+.workband{background:var(--navy);color:var(--paper);border-radius:34px;padding:48px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;position:relative;overflow:hidden}
+.workband h2{font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:10px}
+.workband p{color:rgba(251,249,244,.78);max-width:58ch}
+.workband .btn{background:var(--sun);color:var(--ink)}
+.workband svg{position:absolute;right:-40px;top:-40px;opacity:.5}
+
+.hello{text-align:center;padding:90px 0 100px;position:relative}
+.hello h2{font-size:clamp(3rem,8vw,6rem);color:var(--rust)}
+.hello p{color:var(--muted);font-size:1.15rem;margin:14px auto 28px;max-width:46ch}
+.dots{display:grid;grid-template-columns:repeat(5,10px);gap:16px;position:absolute}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--rust);opacity:.75}
+
+.foot{background:var(--night);color:rgba(251,249,244,.6);padding:28px 0;font-size:.92rem}
+.foot__in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}.foot a{color:var(--paper);text-decoration:none}
+
+@media (max-width:860px){
+  .hero__in,.why,.loves,.mu,.workband{grid-template-columns:1fr}
+  .now{grid-template-columns:1fr}
+  .hero{padding:44px 0 70px}.sec{padding:56px 0}
+  .disco{width:96px;right:-10px}
+  .workband{padding:34px 26px}
+  .print{max-width:380px}
+  .waves{display:none}
+  .sunshape{width:110vw;right:-30vw;top:auto;bottom:-120px}
+}
+@media (max-width:520px){.wrap{padding:0 16px}.dots{display:none}}
+@media (prefers-reduced-motion:no-preference){
+  .bulb{animation:glow 3.6s ease-in-out infinite}
+  .bulb:nth-of-type(2n){animation-delay:-1.2s}.bulb:nth-of-type(3n){animation-delay:-2.4s}
+  @keyframes glow{50%{opacity:.55}}
+  .disco{animation:spin 14s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+}
+
+/* ============================================================
+   additions for the multi-page site (interior pages, lists)
+   ============================================================ */
+
+/* interior page header: smaller than the home hero, same furniture */
+.page-head{position:relative;padding:58px 0 10px}
+.page-head h1{font-size:clamp(2.3rem,5vw,3.6rem)}
+.page-head .lede{margin-top:20px;max-width:56ch}
+.page-head .sun{color:var(--rust)}
+
+/* generic two-column split */
+.split{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+
+/* reading: one entry per book, room for a note under each */
+.books{display:grid;gap:18px;margin-top:8px}
+.book{background:var(--paper);border-radius:24px;padding:26px 28px;box-shadow:0 2px 0 rgba(0,0,0,.04),0 20px 40px -32px rgba(27,25,22,.5)}
+.book h3{font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:600;font-size:1.35rem;line-height:1.2}
+.book .by{color:var(--muted);font-size:.95rem;margin-top:2px}
+.book .note{color:var(--muted);margin-top:12px}
+.book .note em{font-style:normal;color:var(--ink)}
+.book.unwritten{background:transparent;border:1.5px dashed rgba(94,88,78,.3);box-shadow:none}
+.book.unwritten h3{font-weight:500}
+.shelf{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.shelf span{background:var(--paper);border-radius:999px;padding:8px 16px;font-size:.95rem;color:var(--muted);box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.night .shelf span{background:rgba(251,249,244,.1);color:rgba(251,249,244,.78);box-shadow:none}
+
+/* photos: film prints in a loose grid */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:40px;align-items:start}
+.shots .print{max-width:none;justify-self:stretch;margin:0}
+.shots .print:nth-child(2n){transform:rotate(-1.8deg)}
+.shots .print:nth-child(3n){transform:rotate(1.2deg)}
+.gear{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:34px}
+.gear div{border:1.5px solid rgba(94,88,78,.2);border-radius:22px;padding:22px 24px}
+.gear b{display:block;font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-size:1.2rem;margin-bottom:4px}
+.gear p{color:var(--muted);font-size:1rem}
+
+/* work page: case studies */
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px}
+.case{background:var(--paper);border-radius:26px;padding:30px;box-shadow:0 2px 0 rgba(0,0,0,.04),0 24px 46px -34px rgba(27,25,22,.5)}
+.case.wide{grid-column:1/-1}
+.case h3{font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:600;font-size:1.5rem;margin-bottom:6px}
+.case .meta{font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--navy);margin-bottom:12px}
+.case p{color:var(--muted);margin-bottom:10px}
+.case p strong{color:var(--ink);font-weight:600}
+.case.navy{background:var(--navy);color:var(--paper)}
+.case.navy .meta{color:var(--sky)}.case.navy p{color:rgba(251,249,244,.8)}.case.navy p strong{color:#fff}
+.case.rust{background:var(--rust);color:var(--paper)}
+.case.rust .meta{color:var(--bulb)}.case.rust p{color:rgba(251,249,244,.86)}.case.rust p strong{color:#fff}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tags span{font-size:.85rem;padding:6px 13px;border-radius:999px;background:rgba(31,44,82,.08);color:var(--navy);font-weight:500}
+.case.navy .tags span,.case.rust .tags span{background:rgba(255,255,255,.18);color:#fff}
+
+/* numbered outcome list */
+.outcomes{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:12px}
+.outcomes li{position:relative;padding-left:34px;color:var(--muted)}
+.outcomes li::before{content:"";position:absolute;left:0;top:.55em;width:20px;height:8px;border-radius:999px;background:var(--sun)}
+.night .outcomes li{color:rgba(251,249,244,.78)}
+.night .outcomes li::before{background:var(--sky)}
+
+/* simple labelled list */
+.roster{margin-top:26px}
+.roster ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:12px}
+.roster li{color:var(--muted);padding-left:18px;border-left:2px solid rgba(233,162,59,.6)}
+.roster li strong{color:var(--ink);font-weight:600}
+.night .roster li{color:rgba(251,249,244,.76);border-left-color:rgba(140,196,226,.6)}
+.night .roster li strong{color:#fff}
+
+/* skip link + focus */
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:16px;z-index:99;background:var(--sun);color:var(--ink);padding:10px 16px;border-radius:999px;font-weight:700}
+a:focus-visible,.btn:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
+
+/* nav current page */
+.nav ul a[aria-current="page"]{color:var(--bulb)}
+
+@media (max-width:860px){
+  .split,.gear{grid-template-columns:1fr}
+  .shots{grid-template-columns:1fr 1fr}
+  .cases{grid-template-columns:1fr}
+  .page-head{padding:40px 0 6px}
+}
+@media (max-width:520px){
+  .shots{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   Layering fix: the mural is decoration, so it paints BEHIND the words.
+   .hero worked only because .hero__in is position:relative; the plain
+   .wrap inside .page-head / .night / .hello is static, so an absolutely
+   positioned sibling (.mural, .disco, .dots) was painting on top of it.
+   ============================================================ */
+.mural,.disco,.dots{z-index:0}
+.hero__in,.page-head>.wrap,.night>.wrap,.hello>.wrap{position:relative;z-index:1}
+
+/* interior pages get a smaller sun, parked right of the 56ch text column */
+.page-head .sunshape{width:min(340px,32vw);right:max(-100px,calc(50% - 620px));top:0}
+/* keep the heading clear of the sun: rust text on rust stripes disappears */
+.page-head h1{max-width:20ch}
+.page-head .waves{height:460px;top:-40px}
+
+@media (max-width:860px){
+  /* nowhere for it to go on a phone: the text runs full width */
+  .page-head .mural{display:none}
+}
+
+/* ============================================================
+   Landing page: four doors. The home page stopped being a scroll.
+   ============================================================ */
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.doors .card{text-decoration:none;color:var(--ink);display:block;min-height:172px;transition:transform .2s}
+/* specificity: .doors .card beats .c-navy, so re-assert the light text here */
+.doors .c-navy,.doors .c-rust{color:var(--paper)}
+.doors .c-navy .go,.doors .c-rust .go{color:var(--bulb)}
+.doors .card:hover{transform:translateY(-3px) rotate(-.6deg)}
+.doors .card p{max-width:40ch;margin-top:4px}
+.doors .card .go{display:block;margin-top:14px;font-weight:700;font-size:.92rem;letter-spacing:.04em}
+.c-navy{background:var(--navy);color:var(--paper)}
+.c-sky .go,.c-sun .go{color:var(--navy)}
+@media (max-width:860px){.doors{grid-template-columns:1fr}}
+
+/* life page: a stack of distinct sections, each with its own kicker */
+.life-sec{scroll-margin-top:20px}
+.jump{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.jump a{text-decoration:none;border:1.5px solid var(--line,rgba(94,88,78,.3));border-radius:999px;padding:9px 18px;font-weight:500;font-size:.95rem;color:var(--ink)}
+.jump a:hover{background:var(--sun);border-color:var(--sun)}
+.todo{border-left:3px solid var(--sun);padding:4px 0 4px 16px;margin-top:16px;color:var(--muted);font-size:.98rem}
+
+/* ============================================================
+   Secondary nav for the About branch: sits under the dark bar.
+   ============================================================ */
+.subnav{background:var(--night);padding:0 0 16px;margin-top:-22px}
+.subnav .wrap{display:flex;flex-wrap:wrap;gap:8px 22px}
+.subnav a{text-decoration:none;color:rgba(251,249,244,.55);font-size:.95rem;font-weight:500;padding:6px 0;border-bottom:2px solid transparent}
+.subnav a:hover{color:var(--bulb)}
+.subnav a.on{color:var(--paper);border-bottom-color:var(--sun)}
+
+/* "what I'm writing" block above the reading list */
+.writing{border:2px dashed rgba(94,88,78,.4);border-radius:26px;padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.writing h3{font-family:var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;font-size:2rem;color:var(--rust);margin-bottom:10px}
+@media (max-width:860px){.writing{grid-template-columns:1fr;padding:26px}}

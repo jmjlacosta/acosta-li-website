@@ -63,9 +63,9 @@ Project SEED, University of Texas at Austin — Data Researcher
 
 ## ALSO
 
-Mù Coffee ATX — Co-Founder & Director of Coffee
+Mù Coffee ATX — Co-Founder & Head Barista
 *February 2025 — Present*
-- Co-founded a specialty coffee shop and importer of Chinese coffee, running sourcing and import logistics end to end; oversee operations, finance, and performance tracking.
+- Lead the coffee experience for a specialty coffee company and importer of Chinese green coffee — recipe development, quality control, and the bar program.
 
-Baruta FC — Venezuelan liga FUTVE — Professional Soccer Player (Left Wing)
+Baruta FC — Caracas, Venezuela — Professional Soccer Player (Left Wing)
 *2009 Season*
